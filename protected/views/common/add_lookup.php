@@ -8,7 +8,7 @@
  */
 ?>
 
-<div class="modal fade" id="modal-lookup">
+<div class="modal fade" id="modal-lookup" data-backdrop="static">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -19,7 +19,8 @@
 					<div class="form-group">
 						<label class="col-md-2 control-label">Omschrijving</label>
 						<div class="col-md-9">
-							<input id ="lookup-description" type="text" name="description" class="form-control">
+							<input id="lookup-id" type="hidden" "name"="id">
+							<input id="lookup-description" type="text" name="description" class="form-control">
 						</div>
 					</div>
 				</form>

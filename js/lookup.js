@@ -34,15 +34,33 @@ function modusModalLookupIsCreate() {
 function displayModalLookupAsMessageBox(message) {
 	displayModalLookupEntryConrols(false);
 	showModalAddLookupMessage(message, false);
-	displayModalLookupConfirmButton(false);
+	displayModalLookupActionButton(false);
 }
 
 /**
  * Clears value entry.
  */
- function clearModalLookupEntry() {
-	 $("#lookup-description").val('');
- }
+function clearModalLookupValue() {
+	$("#lookup-description").val('');
+}
+
+/**
+ * Sets the value entry
+ * 
+ * @param string value	Entry value.
+ */
+function setModalLookupValue(value) {
+	$("#lookup-description").val(value);
+} 
+
+/**
+ * Sets the id of the lookup value.
+ * 
+ * @param int id	Id of the lookup value.
+ */
+function setModalLookupId(id) {
+	$("#lookup-id").val(id);
+} 
 
 /**
  * Shows or hides the input entries
@@ -66,9 +84,9 @@ function displayModalLookupEntryConrols(display) {
  * @param boolean display	Show / hide the confirm button.
  * 
  */
-function displayModalLookupConfirmButton(display) {
+function displayModalLookupActionButton(display) {
 	display = defaultTo(display, true);
-	button = $("#btn-lookup-confirm");
+	button = $("#btn-lookup-action");
 
 	if (display === true) {
 		show(button);
@@ -141,7 +159,7 @@ function initModalLookup() {
 		setModalLookupActionButtonCaption('Wijzigen');
 	}
 	displayModalLookupEntryConrols();
-	displayModalLookupConfirmButton();
+	displayModalLookupActionButton();
 	displayModalLookupMessage(false);
 	clearModalLookupEntry();
 }
@@ -176,6 +194,20 @@ function actionModalLookup() {
 	} else {
 		showModalAddLookupMessage("Omschrijving is verplicht");
 	}
+}
+
+/**
+ * Opens the modal view.
+ * 
+ * @param object column	Html action column.
+ */
+function openModalLookupEdit(htmlColumn) {
+	row = htmlColumn.closest("tr");
+	id = row.find("td[name='id']").text();
+	description = row.find("td[name='description']").text();
+	setModalLookupId(id);
+	setModalLookupValue(description);
+	$("#modal-lookup").modal('show');
 }
 
 $(document).ready(function() {

@@ -31,7 +31,7 @@
 							'imageUrl'=>'',
 							'url'=>'',
 							'options'=>array('class'=>'glyphicon glyphicon-pencil'),
-							'click'=>'js:function(evt){evt.preventDefault();updateMaaltijdType($(this));}',
+							'click'=>'js:function(evt){evt.preventDefault();openModalLookupEdit($(this));}',
 						),
 						'delete'=>array(
 							'label'=>'',
@@ -45,7 +45,8 @@
 				array(
 					'name'=>'Omschrijving',
 					'value'=>'$data->omschrijving',
-					'sortable'=>true
+					'sortable'=>true,
+					'htmlOptions'=>array('name'=>'description'),
 				),
 				array(
 					'name'=>'Id',
