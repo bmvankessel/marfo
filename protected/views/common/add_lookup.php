@@ -15,7 +15,7 @@
 				<h3 class="text-center"><?=$this->modelname?></h3>
 			</div> 
 			<div class="modal-body">
-				<form id="target-lookup" data-modus="create" class="form-horizontal" action-create="<?=$this->createUrl('create')?>" role="form">
+				<form id="target-lookup" data-modus="create" class="form-horizontal" data-action-create="<?=$this->createUrl('create')?>" role="form">
 					<div class="form-group">
 						<label class="col-md-2 control-label">Omschrijving</label>
 						<div class="col-md-9">

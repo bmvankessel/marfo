@@ -24,14 +24,14 @@ function setModalLookupModus(create) {
  * 
  * @return boolean	Modus create true/false.
  */
-function modalLookupIsCreate() {
+function modusModalLookupIsCreate() {
 	return ($("#target-lookup").attr('data-modus') == 'create') ? true : false;
 }
 
 /**
  * Transform lookup into message box.
  */
-function messageBoxModalAddLookupMessage(message) {
+function displayModalLookupAsMessageBox(message) {
 	displayModalLookupEntryConrols(false);
 	showModalAddLookupMessage(message, false);
 	displayModalLookupConfirmButton(false);
@@ -118,10 +118,24 @@ function showModalAddLookupMessage(message, warning) {
 }
 
 /**
+ * Returns the action url.
+ * 
+ * @returns string	Action url.
+ */
+function getModalLookupActionUrl() {
+	form = $("#target-lookup");
+	if (modusModalLookupIsCreate() === true) {
+		return form.attr('data-action-create'); 
+	} else {
+		return form.attr('data-action-update'); 
+	}
+}
+
+/**
  * Initialize the modal form.
  */
 function initModalLookup() {
-	if (modalLookupIsCreate()) {
+	if (modusModalLookupIsCreate()) {
 		setModalLookupActionButtonCaption('Toevoegen');
 	} else {
 		setModalLookupActionButtonCaption('Wijzigen');
@@ -135,13 +149,13 @@ function initModalLookup() {
 /**
  * Adds a lookup value.
  */ 
-function createLookup() {
+function actionModalLookup() {
 	displayModalLookupMessage(false);
 	description = $("#lookup-description").val();
 	if (description.length > 0) {
 		$.ajax({
 			method: 'post',
-			url: $("#target-lookup-add").attr('action'),
+			url: getModalLookupActionUrl(),
 			data: {'description': JSON.stringify(description)},
 			dataType: 'json',
 		})
@@ -149,7 +163,11 @@ function createLookup() {
 			if (result.status !== 'ok') {
 				showModalAddLookupMessage(result.message);
 			} else {
-				messageBoxModalAddLookupMessage('Omschrijving toegevoegd.');
+				if (modusModalLookupIsCreate() === true) {
+					displayModalLookupAsMessageBox('Omschrijving toegevoegd.');
+				} else {
+					displayModalLookupAsMessageBox('Omschrijving gewijzigd.');
+				}
 			}
 		})
 		.fail(function(jqXHR, textStatus, errorThrown) {
@@ -162,7 +180,7 @@ function createLookup() {
 
 $(document).ready(function() {
 	$("#btn-lookup-action").click(function() {
-		createLookup();
+		actionModalLookup();
 	});
 	
 	$("#modal-lookup").on('show.bs.modal', function() {
