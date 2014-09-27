@@ -155,13 +155,13 @@ function getModalLookupActionUrl() {
 function initModalLookup() {
 	if (modusModalLookupIsCreate()) {
 		setModalLookupActionButtonCaption('Toevoegen');
+		clearModalLookupValue();
 	} else {
 		setModalLookupActionButtonCaption('Wijzigen');
-	}
+}
 	displayModalLookupEntryConrols();
 	displayModalLookupActionButton();
 	displayModalLookupMessage(false);
-	clearModalLookupEntry();
 }
 
 /**
@@ -205,6 +205,7 @@ function openModalLookupEdit(htmlColumn) {
 	row = htmlColumn.closest("tr");
 	id = row.find("td[name='id']").text();
 	description = row.find("td[name='description']").text();
+	setModalLookupModus(false);
 	setModalLookupId(id);
 	setModalLookupValue(description);
 	$("#modal-lookup").modal('show');
