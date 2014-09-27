@@ -8,14 +8,14 @@
  */
 ?>
 
-<div class="modal fade" id="modal-lookup-add">
+<div class="modal fade" id="modal-lookup">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h3>Toevoegen <?=$this->modelname?></h3>
+				<h3 class="text-center"><?=$this->modelname?></h3>
 			</div> 
 			<div class="modal-body">
-				<form id="target-lookup-add" class="form-horizontal" action="<?=$this->createUrl('create')?>" role="form">
+				<form id="target-lookup" data-modus="create" class="form-horizontal" action-create="<?=$this->createUrl('create')?>" role="form">
 					<div class="form-group">
 						<label class="col-md-2 control-label">Omschrijving</label>
 						<div class="col-md-9">
@@ -23,11 +23,11 @@
 						</div>
 					</div>
 				</form>
-				<div id="message-lookup-add" class="alert alert-danger hidden" role ="alert"></div>
+				<div id="message-lookup" class="alert alert-danger hidden" role ="alert"></div>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn pull-left" data-dismiss="modal">Sluiten</button>
-				<button type="button" class="btn btn-success" id="btn-lookup-add" >Toevoegen</button>				
+				<button type="button" class="btn btn-success" id="btn-lookup-action" >Toevoegen</button>				
 			</div>
 		</div>
 	</div>

@@ -1,27 +1,104 @@
 /**
+ * Sets the caption of the action button.
+ * 
+ * @param string caption	Caption for the action button.
+ * 
+ */
+function setModalLookupActionButtonCaption(caption) {
+ $("#btn-lookup-action").text(caption);
+}
+
+/**
+ * Sets the modus of the modal lookup form.
+ * 
+ * @param boolean create	Modus create (true) or update (true).
+ * 
+ */
+function setModalLookupModus(create) {
+	modus = (create === true) ? 'create' : 'update';
+	$("#target-lookup").attr('data-modus', modus);
+}
+
+/**
+ * Returns the modus of the lookup form.
+ * 
+ * @return boolean	Modus create true/false.
+ */
+function modalLookupIsCreate() {
+	return ($("#target-lookup").attr('data-modus') == 'create') ? true : false;
+}
+
+/**
  * Transform lookup into message box.
  */
 function messageBoxModalAddLookupMessage(message) {
-	form = $("#target-lookup-add");
-	hide(form);
+	displayModalLookupEntryConrols(false);
 	showModalAddLookupMessage(message, false);
-	button = $("#btn-lookup-add");
-	hide(button);
+	displayModalLookupConfirmButton(false);
+}
+
+/**
+ * Clears value entry.
+ */
+ function clearModalLookupEntry() {
+	 $("#lookup-description").val('');
+ }
+
+/**
+ * Shows or hides the input entries
+ * 
+ * @param boolean display	Show / hide the entry controls.
+ * 
+ */
+function displayModalLookupEntryConrols(display) {
+	display = defaultTo(display, true);
+	form = $("#target-lookup");
+	if (display === true) {
+		show(form);
+	} else {
+		hide(form);
+	}
+}
+
+/**
+ * Shows or hides the confirm button.
+ * 
+ * @param boolean display	Show / hide the confirm button.
+ * 
+ */
+function displayModalLookupConfirmButton(display) {
+	display = defaultTo(display, true);
+	button = $("#btn-lookup-confirm");
+
+	if (display === true) {
+		show(button);
+	} else {
+		hide(button);
+	}
 }
 
 /**
  * Clears the message in the modal screen for adding a lookup value.
  */
-function clearModalAddLookupMessage() {
+function clearModalLookupMessage() {
 	messageContainer = $("#message-lookup-add");
 	messageContainer.text('');
 }
 
 /**
- * Hides the container for displaying messages.
+ * Displays the container for the messages.
+ * 
+ * @param boolean display	Show / hides the container message.
+ * 
  */
-function hideModalAddLookupMessage() {
-	hide($("#message-lookup-add"));
+function displayModalLookupMessage(display) {
+	display = defaultTo(display, true);
+	messageContainer = $("#message-lookup");
+	if (display) {
+		show(messageContainer);
+	} else {
+		hide(messageContainer);
+	}
 }
 
 /**
@@ -29,8 +106,8 @@ function hideModalAddLookupMessage() {
  */
 function showModalAddLookupMessage(message, warning) {
 	warning = defaultTo(warning, true);
-	clearModalAddLookupMessage();
-	messageContainer = $("#message-lookup-add");
+	clearModalLookupMessage();
+	messageContainer = $("#message-lookup");
 	if (warning === true) {
 		messageContainer.removeClass('alert-success').addClass('alert-danger');
 	} else {
@@ -41,10 +118,25 @@ function showModalAddLookupMessage(message, warning) {
 }
 
 /**
+ * Initialize the modal form.
+ */
+function initModalLookup() {
+	if (modalLookupIsCreate()) {
+		setModalLookupActionButtonCaption('Toevoegen');
+	} else {
+		setModalLookupActionButtonCaption('Wijzigen');
+	}
+	displayModalLookupEntryConrols();
+	displayModalLookupConfirmButton();
+	displayModalLookupMessage(false);
+	clearModalLookupEntry();
+}
+
+/**
  * Adds a lookup value.
  */ 
-function addLookup() {
-	hideModalAddLookupMessage();
+function createLookup() {
+	displayModalLookupMessage(false);
 	description = $("#lookup-description").val();
 	if (description.length > 0) {
 		$.ajax({
@@ -69,7 +161,11 @@ function addLookup() {
 }
 
 $(document).ready(function() {
-	$("#btn-lookup-add").click(function() {
-		addLookup();
+	$("#btn-lookup-action").click(function() {
+		createLookup();
+	});
+	
+	$("#modal-lookup").on('show.bs.modal', function() {
+		initModalLookup();
 	});
 }); 

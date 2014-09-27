@@ -64,7 +64,7 @@
 			'type'=>'button',
 			'class'=>'btn btn-success', 
 			'data-toggle' => 'modal',
-			'data-target' => '#modal-lookup-add',
+			'data-target' => '#modal-lookup',
 		), 
 		$captionButtonAdd);
 
