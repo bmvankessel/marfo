@@ -1,4 +1,7 @@
 <?php
+/**
+ * @copyright Copyright @copy; Brainpower Solutions.nl, 2014
+*/
 
 Yii::import('application.controllers.BaseLookupController');
 

@@ -1,3 +1,15 @@
+/**
+ * Returns default value if undefined.
+ * 
+ * @param mixed value
+ * @param mixed defaultValue
+ * 
+ * @return mixed Value if defined or defaultvalue if undefined.
+ */
+ function defaultTo(value, defaultValue) {
+	 return (typeof(value) === 'undefined') ? defaultValue : value;
+ }
+
 /*
  * Returns the url as stored in a hidden field of the document
  */

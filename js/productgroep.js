@@ -1,3 +1,11 @@
+/**
+ * <description>
+ *
+ * @param
+ *
+ * @return
+ *
+ */
 function initDialogMaaltijdType(dialog, data) {
     // change button caption
     var button = dialog.find("button[role='maaltijdtype-create']");

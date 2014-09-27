@@ -1,7 +1,7 @@
 <?php
  /**
-  * @copyright Copyright &copy; Barry van Kessel, BrainpowerSolutions.nl, 2014
-  */
+  * @copyright Copyright @copy; Brainpower Solutions.nl, 2014
+ */
  
  /**
  * Base controller class for lookup values.
@@ -53,6 +53,35 @@ abstract class BaseLookupController extends Controller {
         echo json_encode($result);
         Yii::app()->end();
     }
+    
+    /**
+	 * Creates a lookupvalue;
+	 *
+	 * @param string $_POST['description']	JSON encoded description of the lookup value.
+	 *
+	 * @return string Status of the request including the id of the newly created lookup value.
+	 *
+	 */
+    public function actionCreate() {
+		$result['status'] = 'not ok';
+		$result['action'] = 'create';
+		
+		$description = (isset($_POST['description'])) ? json_decode($_POST['description']) : null;
+		
+		if($description !== null) {
+			$model = new $this->modelname();
+			$model->omschrijving = $description;
+			if ($model->save()) {
+				$result['status'] = 'ok';
+			} else {
+				$result['message'] = 'Lookup value for ' . $this->modelname . ' could not be saved.';
+			}
+		} else {
+			$result['message'] = "Post argument 'description' expected.";
+		}
+		echo json_encode($result);
+        Yii::app()->end();
+	}
     
     /**
      * Creates a new lookup value.

@@ -59,9 +59,14 @@
 		)
 	);
 
-    echo CHtml::tag('button', array( 'type'=>'button','role'=>'lookup-add','class'=>'btn btn-success'), $captionButtonAdd);
+    echo CHtml::tag('button', 
+		array( 
+			'type'=>'button',
+			'class'=>'btn btn-success', 
+			'data-toggle' => 'modal',
+			'data-target' => '#modal-lookup-add',
+		), 
+		$captionButtonAdd);
 
-    $this->renderPartial('_create');
-
-    Yii::app()->clientScript->registerScriptFile($this->createUrl('js/productgroep.js'));
+    $this->renderPartial('//common/add_lookup', array('title'=>$title));
 ?>

@@ -1,4 +1,8 @@
-<?php 
+<?php
+/**
+ * @copyright Copyright @copy; Brainpower Solutions.nl, 2014
+*/
+
     // add modal template to document
     echo $this->renderPartial('../general/_modal');
 
