@@ -262,7 +262,7 @@ function actionModalLookup() {
 					$("#btn-lookup-close").unbind('click').click(function() {location.reload()});
 					displayModalLookupAsMessageBox('De omschrijving is toegevoegd.\nNa het sluiten van de melding wordt de lijst ververst.');
 				} else {
-					$("#lup_" + id).find("td[name]").text(description);
+					$("#lup_" + id).find("td[name='description']").text(description);
 					displayModalLookupAsMessageBox('De omschrijving is gewijzigd.');
 				}
 			}
@@ -290,7 +290,8 @@ function deleteModalLookup() {
 	})
 	.done(function(result) {
 		if (result.status !== 'ok') {
-			displayModalLookupMessage(result.message, false);
+			alert('not ok');
+			displayModalLookupAsMessageBox(result.message, true, true);
 		} else {
 			$("#btn-lookup-delete-close").unbind('click').click(function() {location.reload()});
 			displayModalLookupAsMessageBox('De omschrijving is verwijderd.\nNa het sluiten van de melding wordt de lijst ververst.', true, false);
@@ -323,6 +324,7 @@ function openModalLookupUpdate(htmlColumn) {
  */
 function openModalLookupCreate() {
 	setModalLookupModus(true);
+	
 	$("#modal-lookup").modal('show');	
 }
 
@@ -338,6 +340,7 @@ function openModalLookupCreate() {
 	setModalLookupValue('id', id, true);
 	setModalLookupValue('description', description, true);
 	showModalLookupMessage("Deze actie verwijdert '" + description + "'.\nKlik verwijderen om de actie uit te voeren.", true);
+	displayModalLookupActionButton(true, true);
 	$("#modal-lookup-delete").modal('show');	 
  }
 
