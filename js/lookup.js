@@ -167,8 +167,8 @@ function getModalLookupActionUrl() {
  */
 function initModalLookup() {
 	if (modusModalLookupIsCreate()) {
-		setModalLookupActionButtonCaption('Toevoegen');
 		clearModalLookupValue();
+		setModalLookupActionButtonCaption('Toevoegen');
 	} else {
 		setModalLookupActionButtonCaption('Wijzigen');
 }
@@ -219,19 +219,28 @@ function actionModalLookup() {
 }
 
 /**
- * Opens the modal view.
+ * Opens modal view for update action.
  * 
  * @param object column	Html action column.
  */
-function openModalLookupForEdit(htmlColumn) {
+function openModalLookupForUpdate(htmlColumn) {
 	row = htmlColumn.closest("tr");
 	id = row.find("td[name='id']").text();
+	// Set the id for the row so it can be identified for a text update.
 	row.attr('id', 'lup_' + id);
 	description = row.find("td[name='description']").text();
 	setModalLookupModus(false);
 	setModalLookupId(id);
 	setModalLookupValue(description);
 	$("#modal-lookup").modal('show');
+}
+
+/**
+ * Opens modal view for create action.
+ */
+function openModalLookupForCreate() {
+	setModalLookupModus(true);
+	$("#modal-lookup").modal('show');	
 }
 
 $(document).ready(function() {
@@ -241,5 +250,9 @@ $(document).ready(function() {
 	
 	$("#modal-lookup").on('show.bs.modal', function() {
 		initModalLookup();
+	});
+
+	$("#btn-lookup-add").click(function() {
+		openModalLookupForCreate();
 	});
 }); 

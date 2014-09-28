@@ -31,7 +31,7 @@
 							'imageUrl'=>'',
 							'url'=>'',
 							'options'=>array('class'=>'glyphicon glyphicon-pencil'),
-							'click'=>'js:function(evt){evt.preventDefault();openModalLookupForEdit($(this));}',
+							'click'=>'js:function(evt){evt.preventDefault();openModalLookupForUpdate($(this));}',
 						),
 						'delete'=>array(
 							'label'=>'',
@@ -62,10 +62,9 @@
 
     echo CHtml::tag('button', 
 		array( 
+			'id'=>'btn-lookup-add',
 			'type'=>'button',
 			'class'=>'btn btn-success', 
-			'data-toggle' => 'modal',
-			'data-target' => '#modal-lookup',
 		), 
 		$captionButtonAdd);
 
