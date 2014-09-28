@@ -2,7 +2,6 @@
  * Sets the caption of the action button.
  * 
  * @param string caption	Caption for the action button.
- * 
  */
 function setModalLookupActionButtonCaption(caption) {
  $("#btn-lookup-action").text(caption);
@@ -12,7 +11,6 @@ function setModalLookupActionButtonCaption(caption) {
  * Sets the modus of the modal lookup form.
  * 
  * @param boolean create	Modus create (true) or update (true).
- * 
  */
 function setModalLookupModus(create) {
 	modus = (create === true) ? 'create' : 'update';
@@ -29,7 +27,9 @@ function modusModalLookupIsCreate() {
 }
 
 /**
- * Transform lookup into message box.
+ * Displays the modal form as a message box.
+ * 
+ * @param string message	Message to display.
  */
 function displayModalLookupAsMessageBox(message) {
 	displayModalLookupEntryConrols(false);
@@ -73,7 +73,6 @@ function setModalLookupId(id) {
  * Returns the id of the lookup value.
  *
  * @return int	Id of the lookup value.
- *
  */
 function getModalLookupId() {
 	return $("#lookup-id").val();
@@ -83,7 +82,6 @@ function getModalLookupId() {
  * Shows or hides the input entries
  * 
  * @param boolean display	Show / hide the entry controls.
- * 
  */
 function displayModalLookupEntryConrols(display) {
 	display = defaultTo(display, true);
@@ -99,7 +97,6 @@ function displayModalLookupEntryConrols(display) {
  * Shows or hides the confirm button.
  * 
  * @param boolean display	Show / hide the confirm button.
- * 
  */
 function displayModalLookupActionButton(display) {
 	display = defaultTo(display, true);
@@ -124,7 +121,6 @@ function clearModalLookupMessage() {
  * Displays the container for the messages.
  * 
  * @param boolean display	Show / hides the container message.
- * 
  */
 function displayModalLookupMessage(display) {
 	display = defaultTo(display, true);
@@ -182,7 +178,7 @@ function initModalLookup() {
 }
 
 /**
- * Adds a lookup value.
+ * Adds or edits a lookup value.
  */ 
 function actionModalLookup() {
 	displayModalLookupMessage(false);
@@ -191,7 +187,8 @@ function actionModalLookup() {
 	if (modusModalLookupIsCreate()) {
 		data = JSON.stringify({'description': description});
 	} else {
-		data = JSON.stringify({'id': getModalLookupId(), 'description': description});
+		id = getModalLookupId();
+		data = JSON.stringify({'id': id, 'description': description});
 	}
 	
 	if (description.length > 0) {
@@ -208,6 +205,7 @@ function actionModalLookup() {
 				if (modusModalLookupIsCreate() === true) {
 					displayModalLookupAsMessageBox('Omschrijving toegevoegd.');
 				} else {
+					$("#lup_" + id).find("td[name]").text(description);
 					displayModalLookupAsMessageBox('Omschrijving gewijzigd.');
 				}
 			}
@@ -228,6 +226,7 @@ function actionModalLookup() {
 function openModalLookupForEdit(htmlColumn) {
 	row = htmlColumn.closest("tr");
 	id = row.find("td[name='id']").text();
+	row.attr('id', 'lup_' + id);
 	description = row.find("td[name='description']").text();
 	setModalLookupModus(false);
 	setModalLookupId(id);
