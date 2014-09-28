@@ -5,6 +5,8 @@
 
 /**
  * Modal dialog for adding a new lookup value.
+ * 
+ * @author Barry M. van Kessel <bmvankessel@brainpowersolutions.nl>
  */
 ?>
 

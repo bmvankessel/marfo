@@ -22,7 +22,7 @@ abstract class BaseLookupController extends Controller {
 	public function actionIndex() {
 		$dataProvider = new CActiveDataProvider($this->modelname);
 		
-		$this->render('//common/index', 
+		$this->render('//common/lookup/index', 
 			array(
 				'dataProvider'=>$dataProvider,
 				'title'=>$this->title,
