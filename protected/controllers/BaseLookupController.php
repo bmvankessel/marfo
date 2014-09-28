@@ -55,7 +55,48 @@ abstract class BaseLookupController extends Controller {
     }
     
     /**
-	 * Creates a lookupvalue;
+     * Checks if the post array contains the entry 'data' with the subentries specified in the 
+     * argument $entries.
+     * 
+     * @param array $entries	Entries expected in the post entry 'data'.
+     * @param array $data		Posted 'data' values if function returns true.
+     * @param string $message	Message specifying missing values if function returns false. 
+     * 
+     * @return					If post contains the expected data.
+     */
+    public function getPostData(array $entries, &$data, &$message) {
+		$data = null;
+		$missingEntries = array();
+		$message = null;
+		if (isset($_POST['data'])) {
+			$data = json_decode($_POST['data'], true);
+			foreach ($entries as $key) {
+				if (!array_key_exists($key, $data)) {
+					$missingEntries[] = $key;
+				}
+			}
+			switch (count($missingEntries)) {
+				case 0:
+					return true;
+					
+				case 1:
+					$message = "Post entry 'data' is missing entry '" . implode($missingEntries) . "'";
+					$data = null;
+					return false;
+				
+				default:
+					$message = "Post entry 'data' is missing entries: '" . implode("', ", $missingEntries) . "'"; 
+					$data = null;
+					return false;
+			}
+		} else {
+			$message = "Post entry 'data' expected.";
+			return false;
+		}
+	}
+    
+    /**
+	 * Creates a lookup value;
 	 *
 	 * @param string $_POST['description']	JSON encoded description of the lookup value.
 	 *
@@ -66,22 +107,51 @@ abstract class BaseLookupController extends Controller {
 		$result['status'] = 'not ok';
 		$result['action'] = 'create';
 		
-		$description = (isset($_POST['description'])) ? json_decode($_POST['description']) : null;
-		
-		if($description !== null) {
+		if ($this->getPostData(array('description'), $data, $message)) {
 			$model = new $this->modelname();
-			$model->omschrijving = $description;
+			$model->omschrijving = $data['description'];
 			if ($model->save()) {
 				$result['status'] = 'ok';
 			} else {
 				$result['message'] = 'Lookup value for ' . $this->modelname . ' could not be saved.';
 			}
 		} else {
-			$result['message'] = "Post argument 'description' expected.";
+			$result['message'] = $message;
 		}
 		echo json_encode($result);
         Yii::app()->end();
 	}
+	
+	/**
+	 * Updates a lookup value.
+	 *
+	 * @return string Status of the request.
+	 *
+	 */
+	 public function actionUpdate() {
+		$result['status'] = 'not ok';
+		$result['action'] = 'update';
+		
+		if ($this->getPostData(array('id','description'), $data, $message)) {
+			$model = new $this->modelname();
+			$model = $model->findByPk($data['id']);
+			
+			if ($model !== null) {
+				$model->omschrijving = $data['description'];
+				if ($model->save()) {
+					$result['status'] = 'ok';
+				} else {
+					$result['message'] = 'Lookup value for ' . $this->modelname . ' could not be saved.';
+				}
+			} else {
+				$result['message'] = $this->modelname . ' not found [id=' . $data['id'] . '].';
+			}
+		} else {
+			$result['message'] = $message;
+		}
+		echo json_encode($result);
+        Yii::app()->end();
+	 }
     
     /**
      * Creates a new lookup value.

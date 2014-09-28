@@ -45,12 +45,19 @@ function clearModalLookupValue() {
 }
 
 /**
- * Sets the value entry
+ * Sets the value entry.
  * 
  * @param string value	Entry value.
  */
 function setModalLookupValue(value) {
 	$("#lookup-description").val(value);
+} 
+
+/**
+ * Returns the value entry.
+ */
+function getModalLookupValue(value) {
+	return $("#lookup-description").val();
 } 
 
 /**
@@ -61,6 +68,16 @@ function setModalLookupValue(value) {
 function setModalLookupId(id) {
 	$("#lookup-id").val(id);
 } 
+
+/**
+ * Returns the id of the lookup value.
+ *
+ * @return int	Id of the lookup value.
+ *
+ */
+function getModalLookupId() {
+	return $("#lookup-id").val();
+}
 
 /**
  * Shows or hides the input entries
@@ -169,12 +186,19 @@ function initModalLookup() {
  */ 
 function actionModalLookup() {
 	displayModalLookupMessage(false);
-	description = $("#lookup-description").val();
+	description = getModalLookupValue();
+	
+	if (modusModalLookupIsCreate()) {
+		data = JSON.stringify({'description': description});
+	} else {
+		data = JSON.stringify({'id': getModalLookupId(), 'description': description});
+	}
+	
 	if (description.length > 0) {
 		$.ajax({
 			method: 'post',
 			url: getModalLookupActionUrl(),
-			data: {'description': JSON.stringify(description)},
+			data: {'data': data},
 			dataType: 'json',
 		})
 		.done(function(result) {
@@ -201,7 +225,7 @@ function actionModalLookup() {
  * 
  * @param object column	Html action column.
  */
-function openModalLookupEdit(htmlColumn) {
+function openModalLookupForEdit(htmlColumn) {
 	row = htmlColumn.closest("tr");
 	id = row.find("td[name='id']").text();
 	description = row.find("td[name='description']").text();
