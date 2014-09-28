@@ -1,8 +1,7 @@
 <?php
- /**
-  * @copyright Copyright @copy; Brainpower Solutions.nl, 2014
- */
- 
+/**
+ * @copyright Copyright &copy; Brainpower Solutions.nl, 2014
+*/ 
  /**
  * Base controller class for lookup values.
  * 
@@ -98,10 +97,10 @@ abstract class BaseLookupController extends Controller {
     /**
 	 * Creates a lookup value;
 	 *
-	 * @param string $_POST['description']	JSON encoded description of the lookup value.
+	 * @param string $_POST['data']		JSON encoded description of the lookup value.
 	 *
-	 * @return string Status of the request including the id of the newly created lookup value.
-	 *
+	 * @return string 					Status of the request including the id of the newly created 
+	 * 									lookup value.
 	 */
     public function actionCreate() {
 		$result['status'] = 'not ok';
@@ -125,8 +124,9 @@ abstract class BaseLookupController extends Controller {
 	/**
 	 * Updates a lookup value.
 	 *
-	 * @return string Status of the request.
-	 *
+	 * @param string $_POST['data']		JSON encoded description of the lookup value.
+	 * 
+	 * @return string 					Status of the request.
 	 */
 	 public function actionUpdate() {
 		$result['status'] = 'not ok';
@@ -152,6 +152,27 @@ abstract class BaseLookupController extends Controller {
 		echo json_encode($result);
         Yii::app()->end();
 	 }
+    
+    /***
+     * Deletes a lookup value.
+     * 
+     */
+	public function actionDelete() {
+        $result['status'] = 'not ok';
+        $result['action'] = 'delete';
+		if ($this->getPostData(array('id'), $data, $message)) {
+			$model = new $this->modelname();
+			if ($model->deleteByPk($data['id']) === 1) {
+				$result['status'] = 'ok';
+			} else {
+				$result['message'] = $this->modelname . ' not found [id=' . $data['id'] . '].';
+			}
+		} else {
+			$result['message'] = $message;
+		}
+		echo json_encode($result);
+        Yii::app()->end();
+	}
     
     /**
      * Creates a new lookup value.
@@ -216,7 +237,7 @@ abstract class BaseLookupController extends Controller {
      *
      * @return string Status of the request. 
      */
-    public function actionDelete() {
+    public function actionDelete_() {
 		
         $result['status'] = 'not ok';
 

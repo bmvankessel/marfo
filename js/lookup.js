@@ -1,10 +1,16 @@
 /**
  * Sets the caption of the action button.
  * 
- * @param string caption	Caption for the action button.
+ * @param string caption			Caption for the action button.
+ * @param boolean modalFormDelete	Form containing the button.
  */
-function setModalLookupActionButtonCaption(caption) {
- $("#btn-lookup-action").text(caption);
+function setModalLookupActionButtonCaption(caption, modalFormDelete) {
+	modalFormDelete = defaultTo(modalFormDelete, false);
+	if (modalFormDelete === true) {
+		$("#btn-lookup-delete").text(caption);
+	} else {
+		$("#btn-lookup-action").text(caption);
+	}
 }
 
 /**
@@ -14,7 +20,7 @@ function setModalLookupActionButtonCaption(caption) {
  */
 function setModalLookupModus(create) {
 	modus = (create === true) ? 'create' : 'update';
-	$("#target-lookup").attr('data-modus', modus);
+	getModalLookupForm(false).attr('data-modus', modus);
 }
 
 /**
@@ -23,60 +29,75 @@ function setModalLookupModus(create) {
  * @return boolean	Modus create true/false.
  */
 function modusModalLookupIsCreate() {
-	return ($("#target-lookup").attr('data-modus') == 'create') ? true : false;
+	return (getModalLookupForm(false).attr('data-modus') == 'create') ? true : false;
 }
 
 /**
  * Displays the modal form as a message box.
  * 
- * @param string message	Message to display.
+ * @param string message			Message to display.
+ * @param boolean modalFormDelete	Target form delete (true) or create/update (false).
+ * 
  */
-function displayModalLookupAsMessageBox(message) {
-	displayModalLookupEntryConrols(false);
-	showModalAddLookupMessage(message, false);
-	displayModalLookupActionButton(false);
+function displayModalLookupAsMessageBox(message, modalFormDelete, warning) {
+	modalFormDelete = defaultTo(modalFormDelete, false);
+	warning = defaultTo(warning, false);
+	if (modalFormDelete === true) {
+		displayModalLookupEntryConrols(false);
+		displayModalLookupMessage();
+	}
+	showModalLookupMessage(message, modalFormDelete, warning);
+	displayModalLookupActionButton(false, modalFormDelete);
 }
 
 /**
  * Clears value entry.
+ * 
+ * @param boolean modalFormDelete	Target form delete (true) or create/update (false).
  */
-function clearModalLookupValue() {
-	$("#lookup-description").val('');
+function clearModalLookupValue(modalFormDelete) {
+	modalFormDelete = defaultTo(modalFormDelete, false);
+	setModalLookupValue('description','', modalFormDelete);
 }
 
 /**
- * Sets the value entry.
+ * Returns the form element within the modal form.
  * 
- * @param string value	Entry value.
+ * @param boolean modalFormDelete	Target form delete (true) or create/update (false).
  */
-function setModalLookupValue(value) {
-	$("#lookup-description").val(value);
-} 
-
-/**
- * Returns the value entry.
- */
-function getModalLookupValue(value) {
-	return $("#lookup-description").val();
-} 
-
-/**
- * Sets the id of the lookup value.
- * 
- * @param int id	Id of the lookup value.
- */
-function setModalLookupId(id) {
-	$("#lookup-id").val(id);
-} 
-
-/**
- * Returns the id of the lookup value.
- *
- * @return int	Id of the lookup value.
- */
-function getModalLookupId() {
-	return $("#lookup-id").val();
+function getModalLookupForm(modalFormDelete) {
+	modalFormDelete = defaultTo(modalFormDelete, false);
+	if (modalFormDelete === true) {
+		return $("#form-lookup-delete");
+	} else {
+		return $("#form-lookup");
+	}
 }
+
+/**
+ * Sets the field value for a modal form.
+ * 
+ * @param string name				Field name to set.
+ * @param string value				Field value to set.
+ * @param boolean modalFormDelete	Target form delete (true) or create/update (false).
+ */
+function setModalLookupValue(name, value, modalFormDelete) {
+	modalFormDelete = defaultTo(modalFormDelete, false);
+	getModalLookupForm(modalFormDelete).find("input[name='" + name + "']").val(value);
+} 
+
+/**
+ * Gets the field value from a modal form.
+ * 
+ * @param string name				Field name to set.
+ * @param boolean modalFormDelete	Target form delete (true) or create/update (false).
+ * 
+ * @return string					Field value.
+ */
+function getModalLookupValue(name, modalFormDelete) {
+	modalFormDelete = defaultTo(modalFormDelete, false);
+	return getModalLookupForm(modalFormDelete).find("input[name='" + name + "']").val();
+} 
 
 /**
  * Shows or hides the input entries
@@ -96,11 +117,18 @@ function displayModalLookupEntryConrols(display) {
 /**
  * Shows or hides the confirm button.
  * 
- * @param boolean display	Show / hide the confirm button.
+ * @param boolean display			Show / hide the confirm button.
+ * @param boolean modalFormDelete	Target form delete (true) or create/update (false).
  */
-function displayModalLookupActionButton(display) {
+function displayModalLookupActionButton(display, modalFormDelete) {
 	display = defaultTo(display, true);
-	button = $("#btn-lookup-action");
+	modalFormDelete = defaultTo(modalFormDelete, false);
+
+	if (modalFormDelete === true) {
+		button = $("#btn-lookup-delete-action");
+	} else {
+		button = $("#btn-lookup-action");
+	}
 
 	if (display === true) {
 		show(button);
@@ -111,10 +139,17 @@ function displayModalLookupActionButton(display) {
 
 /**
  * Clears the message in the modal screen for adding a lookup value.
+ * 
+ * @param boolean modalFormDelete	Target form delete (true) or create/update (false).
  */
-function clearModalLookupMessage() {
-	messageContainer = $("#message-lookup-add");
-	messageContainer.text('');
+function clearModalLookupMessage(modalFormDelete) {
+	modalFormDelete = defaultTo(modalFormDelete, false);
+	if (modalFormDelete === true) {
+		messageContainer = $("#message-lookup-delete");
+	} else {
+		messageContainer = $("#message-lookup");
+	}
+	messageContainer.children().remove();
 }
 
 /**
@@ -133,32 +168,53 @@ function displayModalLookupMessage(display) {
 }
 
 /**
- * Shows a message in the modal screen for adding a lookup value.
+ * Shows a message in the modal form.
+ * 
+ * @param string message			Message to display.
+ * @param boolean modalFormDelete	Target form delete (true) or create/update (false).
+ * @param boolean warning			Displays message in warning (true) or normal (false) mode.
  */
-function showModalAddLookupMessage(message, warning) {
+function showModalLookupMessage(message, modalFormDelete, warning) {
+	modalFormDelete = defaultTo(modalFormDelete, false);
 	warning = defaultTo(warning, true);
-	clearModalLookupMessage();
-	messageContainer = $("#message-lookup");
+	clearModalLookupMessage(modalFormDelete);
+	if (modalFormDelete === true) {
+		messageContainer = $("#message-lookup-delete");
+	} else {
+		messageContainer = $("#message-lookup");
+	}
 	if (warning === true) {
 		messageContainer.removeClass('alert-success').addClass('alert-danger');
 	} else {
 		messageContainer.removeClass('alert-danger').addClass('alert-success');		
 	}
-	messageContainer.text(message);
+	messages = message.split('\n');
+	message = '';
+	for (i=0;i<messages.length;i++) {
+		message = message + '<div>' + messages[i] + '</div>';
+	}
+	messageContainer.append(message);
 	show(messageContainer);
 }
 
 /**
  * Returns the action url.
  * 
+ * @param boolean modalFormDelete	Target form delete (true) or create/update (false).
+ * 
  * @returns string	Action url.
  */
-function getModalLookupActionUrl() {
-	form = $("#target-lookup");
-	if (modusModalLookupIsCreate() === true) {
-		return form.attr('data-action-create'); 
+function getModalLookupActionUrl(modalFormDelete) {
+	modalFormDelete = defaultTo(modalFormDelete, false);
+	
+	if (modalFormDelete === true) {
+		return getModalLookupForm(modalFormDelete).attr('data-action-delete');
 	} else {
-		return form.attr('data-action-update'); 
+		if (modusModalLookupIsCreate() === true) {
+			return getModalLookupForm(modalFormDelete).attr('data-action-create'); 
+		} else {
+			return getModalLookupForm(modalFormDelete).attr('data-action-update'); 
+		}
 	}
 }
 
@@ -182,12 +238,12 @@ function initModalLookup() {
  */ 
 function actionModalLookup() {
 	displayModalLookupMessage(false);
-	description = getModalLookupValue();
+	description = getModalLookupValue('description');
 	
 	if (modusModalLookupIsCreate()) {
 		data = JSON.stringify({'description': description});
 	} else {
-		id = getModalLookupId();
+		id = getModalLookupValue('id');
 		data = JSON.stringify({'id': id, 'description': description});
 	}
 	
@@ -203,10 +259,11 @@ function actionModalLookup() {
 				showModalAddLookupMessage(result.message);
 			} else {
 				if (modusModalLookupIsCreate() === true) {
-					displayModalLookupAsMessageBox('Omschrijving toegevoegd.');
+					$("#btn-lookup-close").unbind('click').click(function() {location.reload()});
+					displayModalLookupAsMessageBox('De omschrijving is toegevoegd.\nNa het sluiten van de melding wordt de lijst ververst.');
 				} else {
 					$("#lup_" + id).find("td[name]").text(description);
-					displayModalLookupAsMessageBox('Omschrijving gewijzigd.');
+					displayModalLookupAsMessageBox('De omschrijving is gewijzigd.');
 				}
 			}
 		})
@@ -214,34 +271,75 @@ function actionModalLookup() {
 			showModalAddLookupMessage('Error: ' + errorThrown);
 		});
 	} else {
-		showModalAddLookupMessage("Omschrijving is verplicht");
+		showModalAddLookupMessage("De omschrijving is verplicht");
 	}
+}
+
+/**
+ * Deletes a lookup value.
+ */ 
+function deleteModalLookup() {
+	id = getModalLookupValue('id', true);
+	data = JSON.stringify({'id': id});
+
+	$.ajax({
+		method: 'post',
+		url: getModalLookupActionUrl(true),
+		data: {'data': data},
+		dataType: 'json',
+	})
+	.done(function(result) {
+		if (result.status !== 'ok') {
+			displayModalLookupMessage(result.message, false);
+		} else {
+			$("#btn-lookup-delete-close").unbind('click').click(function() {location.reload()});
+			displayModalLookupAsMessageBox('De omschrijving is verwijderd.\nNa het sluiten van de melding wordt de lijst ververst.', true, false);
+		}
+	})
+	.fail(function(jqXHR, textStatus, errorThrown) {
+		showModalAddLookupMessage('Error: ' + errorThrown);
+	});
 }
 
 /**
  * Opens modal view for update action.
  * 
- * @param object column	Html action column.
+ * @param object column	Html action column clicked.
  */
-function openModalLookupForUpdate(htmlColumn) {
+function openModalLookupUpdate(htmlColumn) {
 	row = htmlColumn.closest("tr");
 	id = row.find("td[name='id']").text();
 	// Set the id for the row so it can be identified for a text update.
 	row.attr('id', 'lup_' + id);
 	description = row.find("td[name='description']").text();
 	setModalLookupModus(false);
-	setModalLookupId(id);
-	setModalLookupValue(description);
+	setModalLookupValue('id',id, false);
+	setModalLookupValue('description', description, false);
 	$("#modal-lookup").modal('show');
 }
 
 /**
  * Opens modal view for create action.
  */
-function openModalLookupForCreate() {
+function openModalLookupCreate() {
 	setModalLookupModus(true);
 	$("#modal-lookup").modal('show');	
 }
+
+/**
+ * Open modal view for delete action
+ *
+ * @param object column	Html action column clicked.
+ */
+ function openModalLookupDelete(htmlColumn) {
+	row = htmlColumn.closest("tr");
+	id = row.find("td[name='id']").text();
+	description = row.find("td[name='description']").text();
+	setModalLookupValue('id', id, true);
+	setModalLookupValue('description', description, true);
+	showModalLookupMessage("Deze actie verwijdert '" + description + "'.\nKlik verwijderen om de actie uit te voeren.", true);
+	$("#modal-lookup-delete").modal('show');	 
+ }
 
 $(document).ready(function() {
 	$("#btn-lookup-action").click(function() {
@@ -253,6 +351,10 @@ $(document).ready(function() {
 	});
 
 	$("#btn-lookup-add").click(function() {
-		openModalLookupForCreate();
+		openModalLookupCreate();
+	});
+	
+	$("#btn-lookup-delete-action").click(function() {
+		deleteModalLookup();
 	});
 }); 

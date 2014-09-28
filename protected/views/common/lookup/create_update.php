@@ -17,19 +17,19 @@
 				<h3 class="text-center"><?=$this->modelname?></h3>
 			</div> 
 			<div class="modal-body">
-				<form id="target-lookup" data-modus="create" class="form-horizontal" data-action-create="<?=$this->createUrl('create')?>" data-action-update="<?=$this->createUrl('update')?>" role="form">
-					<input id="lookup-id" type="hidden" "name"="id">
+				<form id="form-lookup" data-modus="create" class="form-horizontal" data-action-create="<?=$this->createUrl('create')?>" data-action-update="<?=$this->createUrl('update')?>" role="form">
+					<input type="hidden" name="id">
 					<div class="form-group">
 						<label class="col-md-2 control-label">Omschrijving</label>
 						<div class="col-md-9">
-							<input id="lookup-description" type="text" name="description" class="form-control">
+							<input type="text" name="description" class="form-control">
 						</div>
 					</div>
 				</form>
 				<div id="message-lookup" class="alert alert-danger hidden" role ="alert"></div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn pull-left" data-dismiss="modal">Sluiten</button>
+				<button type="button" class="btn pull-left" id="btn-lookup-close" data-dismiss="modal">Sluiten</button>
 				<button type="button" class="btn btn-success" id="btn-lookup-action" >Toevoegen</button>				
 			</div>
 		</div>
