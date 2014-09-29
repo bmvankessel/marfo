@@ -1,6 +1,56 @@
 <?php
+/**
+ * @copyright Copyright &copy; Brainpower Solutions.nl, 2014
+ */
 
+/**
+ * Manages the requests for viewing, creating, updating and deleting maaltijdfilters.
+ *
+ * @author Barry M. van Kessel <bmvankessel@brainpowersolutions.nl>
+ */
 class MaaltijdzoekfilterController extends Controller {
+	
+    /**
+     * Checks if the post array contains the entry 'data' with the subentries specified in the 
+     * argument $entries.
+     * 
+     * @param array $entries	Entries expected in the post entry 'data'.
+     * @param array $data		Posted 'data' values if function returns true.
+     * @param string $message	Message specifying missing values if function returns false. 
+     * 
+     * @return					If post contains the expected data.
+     */
+    public function getPostData(array $entries, &$data, &$message) {
+		$data = null;
+		$missingEntries = array();
+		$message = null;
+		if (isset($_POST['data'])) {
+			$data = json_decode($_POST['data'], true);
+			foreach ($entries as $key) {
+				if (!array_key_exists($key, $data)) {
+					$missingEntries[] = $key;
+				}
+			}
+			switch (count($missingEntries)) {
+				case 0:
+					return true;
+					
+				case 1:
+					$message = "Post entry 'data' is missing entry '" . implode($missingEntries) . "'";
+					$data = null;
+					return false;
+				
+				default:
+					$message = "Post entry 'data' is missing entries: '" . implode("', ", $missingEntries) . "'"; 
+					$data = null;
+					return false;
+			}
+		} else {
+			$message = "Post entry 'data' expected.";
+			return false;
+		}
+	}
+
     public function actionIndex() {
         $this->render('index', array('dataProvider'=>  Maaltijdzoekfilter::model()->search()));
     }
@@ -19,6 +69,36 @@ class MaaltijdzoekfilterController extends Controller {
         Maaltijdzoekfilter::model()->moveDown($id);
         $this->render('index', array('dataProvider'=>  Maaltijdzoekfilter::model()->search()));
     }
+
+    /**
+	 * Creates a maaltijdfilter;
+	 *
+	 * @param string $_POST['data']		JSON encoded description of the lookup value.
+	 *
+	 * @return string 					Status of the request including the id of the newly created 
+	 * 									lookup value.
+	 */
+    public function actionCreate() {
+		$result['status'] = 'not ok';
+		$result['action'] = 'create';
+		
+		if ($this->getPostData(array('productgroep-id', 'maaltijdtype-id', 'maaltijdsubtype-id', 'tooltip'), $data, $message)) {
+			$model = new Maaltijdzoekfilter();
+			$model->productgroep_id = $data['productgroep-id'];
+			$model->maaltijdtype_id = $data['maaltijdtype-id'];
+			$model->maaltijdsubtype_id = $data['maaltijdsubtype-id'];
+			$model->tooltip = $data['tooltip'];
+			if ($model->save()) {
+				$result['status'] = 'ok';
+			} else {
+				$result['message'] = 'Lookup value for maaltijdfilter could not be saved.';
+			}
+		} else {
+			$result['message'] = $message;
+		}
+		echo json_encode($result);
+        Yii::app()->end();
+	}
 
     public function actionUpdate($id=0) {
         if (Yii::app()->request->isPostRequest) {

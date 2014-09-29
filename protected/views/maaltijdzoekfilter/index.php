@@ -8,7 +8,7 @@
 
     $this->widget('zii.widgets.grid.CGridView', array(
 	'dataProvider'=>$dataProvider,
-        'emptyText'=>'Er zijn geem maaltijdzoekfilters',
+        'emptyText'=>'Er zijn geen maaltijdzoekfilters',
         'summaryText'=>'<h1>Maaltijdzoekfilters <span style="font-size:12px">{start} t/m {end} van {count}<span></h1>',
         'pagerCssClass'=>'pagination',
         'pager'=>array(
@@ -65,22 +65,24 @@
                 ),
             ),
             array(
-                'htmlOptions'=>array('class'=>'col-md-3'),
-                'name'=>'Maaltijdtype',
-                'value'=>'$data->maaltijdtype->omschrijving',
-                'sortable'=>true
+                'htmlOptions'=>array('class'=>'col-md-2'),
+                'name'=>'Productgroep',
+                'value'=>'$data->productgroep->omschrijving',
             ),
             array(
-                'htmlOptions'=>array('class'=>'col-md-3'),
+                'htmlOptions'=>array('class'=>'col-md-2'),
+                'name'=>'Maaltijdtype',
+                'value'=>'$data->maaltijdtype->omschrijving',
+            ),
+            array(
+                'htmlOptions'=>array('class'=>'col-md-2'),
                 'name'=>'Maaltijdsubtype',
                 'value'=>'substr($data->maaltijdsubtype->omschrijving,0,50)',
-                'sortable'=>true
             ),
             array(
                 'htmlOptions'=>array('class'=>'col-md-5'),
                 'name'=>'Tooltip',
                 'value'=>'$data->tooltip',
-                'sortable'=>true
             ),
             array(
                 'name'=>'Id',
@@ -88,7 +90,6 @@
                 'htmlOptions'=>array('name'=>'id', 'class'=>'hidden'),
                 'value'=>'$data->id',
                 'visible'=>'false',
-                'sortable'=>true
             ),
             array(
                 'name'=>'sequence',
@@ -96,7 +97,6 @@
                 'htmlOptions'=>array('name'=>'sequence', 'class'=>'hidden'),
                 'value'=>'$data->sequence',
                 'visible'=>'false',
-                'sortable'=>true
             ),
         )
 ));
@@ -104,6 +104,34 @@
     echo CHtml::openTag('div', array('class'=>'row'));
     echo CHtml::openTag('div', array('class'=>'col-md-12'));
     
-    echo CHtml::link('Nieuw zoekfilter', $this->createUrl('update'), array('class'=>'btn btn-success'));
+    echo CHtml::button('Nieuw zoekfilter', array(
+		'class'=>'btn btn-success',
+		'id'=>'btn-maaltijdfilter-add',
+    ));
+    
     echo CHtml::closeTag('div');    
     echo CHtml::closeTag('div');
+
+	$options = Productgroep::model()->findAll(array('order'=>'omschrijving'));
+	$productgroepOptions = array();
+	foreach ($options as $option) {
+		$productgroepOptions[$option->id] = $option->omschrijving;
+	}
+
+	$options = Maaltijdtype::model()->findAll(array('order'=>'omschrijving'));
+	$maaltijdtypeOptions = array();
+	foreach ($options as $option) {
+		$maaltijdtypeOptions[$option->id] = $option->omschrijving;
+	}
+
+	$options = Maaltijdsubtype::model()->findAll(array('order'=>'omschrijving'));
+	$maaltijdsubtypeOptions = array();
+	foreach ($options as $option) {
+		$maaltijdsubtypeOptions[$option->id] = $option->omschrijving;
+	}
+
+	$this->renderPartial('create_update', array(
+		'productgroepOptions'=>$productgroepOptions,
+		'maaltijdtypeOptions'=>$maaltijdtypeOptions,
+		'maaltijdsubtypeOptions'=>$maaltijdsubtypeOptions,
+	));

@@ -9,6 +9,7 @@ class Maaltijdzoekfilter extends CCustomActiveRecord {
     public function attributeTypes() {
         return array(
             'id' => 'int',
+            'productgroep_id' => 'int',
             'maaltijdtype_id' => 'int',
             'maaltijdsubtype_id' => 'int',
             'tooltip' => 'string'
@@ -17,6 +18,7 @@ class Maaltijdzoekfilter extends CCustomActiveRecord {
     
     public function relations() {
         return array(
+			'productgroep'=>array(self::BELONGS_TO, 'Productgroep', 'productgroep_id'),
             'maaltijdtype'=>array(self::BELONGS_TO, 'Maaltijdtype', 'maaltijdtype_id'),
             'maaltijdsubtype'=>array(self::BELONGS_TO, 'Maaltijdsubtype', 'maaltijdsubtype_id'),
             );

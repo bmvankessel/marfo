@@ -1,4 +1,14 @@
 /**
+ * @copyright Copyright &copy; Brainpower Solutions.nl, 2014
+ */
+
+/**
+ * CRUD functions for lookup values implemented with Bootstrap's modal. 
+ *
+ * @author Barry M. van Kessel <bmvankessel@brainpowersolutions.nl>
+ */
+
+/**
  * Sets the caption of the action button.
  * 
  * @param string caption			Caption for the action button.
@@ -320,7 +330,7 @@ function openModalLookupUpdate(htmlColumn) {
 }
 
 /**
- * Opens modal view for create action.
+ * Opens modal for creating lookup value.
  */
 function openModalLookupCreate() {
 	setModalLookupModus(true);
