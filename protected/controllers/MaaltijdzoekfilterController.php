@@ -87,6 +87,7 @@ class MaaltijdzoekfilterController extends Controller {
 			$model->maaltijdtype_id = $data['maaltijdtype-id'];
 			$model->maaltijdsubtype_id = $data['maaltijdsubtype-id'];
 			$model->tooltip = $data['tooltip'];
+			$model->sequence = $this->getNextSequence();
 			if ($model->save()) {
 				$result['status'] = 'ok';
 			} else {
@@ -220,4 +221,25 @@ class MaaltijdzoekfilterController extends Controller {
             );            
         }
     }
+
+	/**
+	 * Returns the next available sequence number.
+	 */
+	private function getNextSequence() {
+		$criteria = new CDbCriteria();
+		$criteria->select = 'MAX(sequence) as maxSequence';
+		$model = Maaltijdzoekfilter::model()->find($criteria);
+		return ($model->maxSequence !== null) ? $model->maxSequence + 1 : 1 ;		
+	}
+    
+    /**
+	 * TEST! REMOVE WHEN RELEASING TO PRODUCTION.
+	 */
+    public function actionTest() {
+		$criteria = new CDbCriteria();
+		$criteria->select = 'MAX(sequence) as maxSequence';
+		$model = Maaltijdzoekfilter::model()->find($criteria);
+		echo ($model->maxSequence !== null) ? $model->maxSequence + 1 : 0 ;		
+	}
+	
 }

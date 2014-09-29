@@ -52,7 +52,7 @@ function actionModalMaaltijdfilter() {
 		}
 	})
 	.fail(function(jqXHR, textStatus, errorThrown) {
-		showModalMaaltijdfilterMessage('Error: ' + errorThrown);
+		displayModalMaaltijdfilterAsMessageBox('Error: ' + errorThrown, false, true);
 	});
 } 
 

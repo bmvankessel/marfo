@@ -1,6 +1,8 @@
 <?php
 
 class Maaltijdzoekfilter extends CCustomActiveRecord {
+	public $maxSequence;
+	
     public function tableName()
     {
             return 'maaltijdzoekfilter';
