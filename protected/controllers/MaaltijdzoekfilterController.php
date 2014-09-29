@@ -236,10 +236,23 @@ class MaaltijdzoekfilterController extends Controller {
 	 * TEST! REMOVE WHEN RELEASING TO PRODUCTION.
 	 */
     public function actionTest() {
+		
+		/*
 		$criteria = new CDbCriteria();
 		$criteria->select = 'MAX(sequence) as maxSequence';
 		$model = Maaltijdzoekfilter::model()->find($criteria);
 		echo ($model->maxSequence !== null) ? $model->maxSequence + 1 : 0 ;		
+		*/
+		$model = new Maaltijd();
+		
+		foreach ($model->searchNavigation(null)['mainGroup'] as $mainGroup) {
+			foreach ($mainGroup['group'] as $group) {
+				foreach ($group['subgroup'] as $subgroup) {
+					echo $mainGroup['name'] . '-' . $group['name'] . '-' . $subgroup['name'] . ': ' . $subgroup['description'] . '<br>';
+				}
+			}
+		}
+//		echo 'Test';		
 	}
 	
 }
