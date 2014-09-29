@@ -64,9 +64,9 @@ function actionModalMaaltijdfilter() {
 function clearModalMaaltijdfilterMessage(modalFormDelete) {
 	modalFormDelete = defaultTo(modalFormDelete, false);
 	if (modalFormDelete === true) {
-		messageContainer = $("#message-lookup-delete");
+		messageContainer = $("#message-maaltijdfilter-delete");
 	} else {
-		messageContainer = $("#message-lookup");
+		messageContainer = $("#message-maaltijdfilter");
 	}
 	messageContainer.children().remove();
 }
@@ -79,6 +79,33 @@ function clearModalMaaltijdfilterMessage(modalFormDelete) {
 function clearModalMaaltijdfilterValue(modalFormDelete) {
 	modalFormDelete = defaultTo(modalFormDelete, false);
 	setModalMaaltijdfilterValue('tooltip','', modalFormDelete, 'textarea');
+}
+
+/**
+ * Deletes a maaltijdfilter.
+ */ 
+function deleteModalMaaltijdfilter() {
+	id = getModalMaaltijdfilterValue('id', true);
+	data = JSON.stringify({'id': id});
+
+	$.ajax({
+		method: 'post',
+		url: getModalMaaltijdfilterActionUrl(true),
+		data: {'data': data},
+		dataType: 'json',
+	})
+	.done(function(result) {
+		if (result.status !== 'ok') {
+			alert('not ok');
+			displayModalMaaltijdfilterAsMessageBox(result.message, true, true);
+		} else {
+			$("#btn-maaltijdfilter-delete-close").unbind('click').click(function() {location.reload()});
+			displayModalMaaltijdfilterAsMessageBox('Het maaltijdfilter is verwijderd.\nNa het sluiten van de melding wordt de lijst ververst.', true, false);
+		}
+	})
+	.fail(function(jqXHR, textStatus, errorThrown) {
+		showModalMaaltijdfilterMessage('Error: ' + errorThrown);
+	});
 }
 
 /**
@@ -165,7 +192,7 @@ function getModalMaaltijdfilterValue(name, modalFormDelete, controlType) {
 function getModalMaaltijdfilterForm(modalFormDelete) {
 	modalFormDelete = defaultTo(modalFormDelete, false);
 	if (modalFormDelete === true) {
-		return $("#form-maalijdfilter-delete");
+		return $("#form-maaltijdfilter-delete");
 	} else {
 		return $("#form-maaltijdfilter");
 	}
@@ -188,6 +215,26 @@ function openModalMaaltijdfilterCreate() {
 	clearModalMaaltijdfilterValue();
 	$("#modal-maaltijdfilter").modal('show');	
 }
+
+/**
+ * Open modal for deleting maaltijdfilter.
+ *
+ * @param object column	Html action column clicked.
+ */
+ function openModalMaaltijdfilterDelete(htmlColumn) {
+	clearModalMaaltijdfilterMessage(true);
+	row = htmlColumn.closest("tr");
+	id = getColumnValue(row, 'id');
+	productgroep = getColumnValue(row, 'productgroep');
+	maaltijdtype = getColumnValue(row, 'maaltijdtype');
+	maaltijdsubtype = getColumnValue(row, 'maaltijdsubtype');
+	setModalMaaltijdfilterValue('id', id, true);
+	maaltijdfilter = productgroep + "-" + maaltijdtype + "-" + maaltijdsubtype;
+	showModalMaaltijdfilterMessage("Deze actie verwijdert '" + maaltijdfilter + 
+		"'.\nKlik verwijderen om de actie uit te voeren.", true);
+	showModalMaaltijdfilterActionButton(true, true);
+	$("#modal-maaltijdfilter-delete").modal('show');	 
+ }
 
 /**
  * Sets the caption of the action button.
@@ -359,5 +406,9 @@ $(document).ready(function() {
 	
 	$("#btn-maaltijdfilter-action").click(function() {
 		actionModalMaaltijdfilter();
+	});
+	
+	$("#btn-maaltijdfilter-delete-action").click(function() {
+		deleteModalMaaltijdfilter();
 	});
 });

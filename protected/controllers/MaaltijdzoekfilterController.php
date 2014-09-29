@@ -60,11 +60,6 @@ class MaaltijdzoekfilterController extends Controller {
         $this->render('index', array('dataProvider'=>  Maaltijdzoekfilter::model()->search()));
     }
 
-    public function actionDelete($id) {
-        Maaltijdzoekfilter::model()->deleteByPk($id);
-        $this->render('index', array('dataProvider'=>  Maaltijdzoekfilter::model()->search()));
-    }
-
     public function actionDown($id) {
         Maaltijdzoekfilter::model()->moveDown($id);
         $this->render('index', array('dataProvider'=>  Maaltijdzoekfilter::model()->search()));
@@ -137,6 +132,30 @@ class MaaltijdzoekfilterController extends Controller {
 				}
 			} else {
 				$result['message'] = 'Maaltijdfilter could not be found [id=' . $data['id'] . ']';
+			}
+		} else {
+			$result['message'] = $message;
+		}
+		echo json_encode($result);
+        Yii::app()->end();
+	}
+
+    /***
+     * Deletes a maaltijdfilter.
+     * 
+	 * @param string $_POST['data']		JSON encoded maaltijdfilter data:
+	 * 									- id
+	 *
+	 * @return string 					Status of the update request.
+     */
+	public function actionDelete() {
+        $result['status'] = 'not ok';
+        $result['action'] = 'delete';
+		if ($this->getPostData(array('id'), $data, $message)) {
+			if (Maaltijdzoekfilter::model()->deleteByPk($data['id']) === 1) {
+				$result['status'] = 'ok';
+			} else {
+				$result['message'] = 'Maaltijdzoekfilter not found [id=' . $data['id'] . '].';
 			}
 		} else {
 			$result['message'] = $message;

@@ -39,11 +39,12 @@
                     'del'=>array(
                         'label'=>'',
                         'imageUrl'=>'',
-                        'url'=>'$this->grid->controller->createUrl("delete", array("id"=>$data->id))',
+                        'url'=>'',
                         'options'=>array(
                             'class'=>'glyphicon glyphicon-trash',
                             'title'=>'Verwijderen',
                         ),
+                        'click'=>'js:function(evt){evt.preventDefault();openModalMaaltijdfilterDelete($(this));}',
                     ),
                     'up'=>array(
                         'label'=>'',
@@ -161,3 +162,4 @@
 		'maaltijdtypeOptions'=>$maaltijdtypeOptions,
 		'maaltijdsubtypeOptions'=>$maaltijdsubtypeOptions,
 	));
+	$this->renderPartial('delete');
