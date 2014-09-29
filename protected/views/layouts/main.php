@@ -17,7 +17,6 @@
         <link rel="stylesheet" href="<?=Yii::app()->createUrl('css/custom.css')?>">
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
-<!--        <script src="<?=Yii::app()->createUrl('jquery/jquery-1.11.1.min.js')?>"></script>-->
         <script src="<?=Yii::app()->createUrl('jquery-ui/js/jquery-ui-1.10.4.min.js')?>"></script>
         <script src="<?=Yii::app()->createUrl('bootstrap/js/bootstrap.min.js')?>"></script>
         <script src="<?=Yii::app()->createUrl('initializr/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')?>"></script>
@@ -77,22 +76,6 @@
                         <?php
                             $menuItems = array();
 
-//                            if (!Yii::app()->user->isGuest) {
-//                                $menuItems['Maaltijden'] = Yii::app()->createUrl('maaltijd');
-//                                $menuItems['Maaltijdtypen'] = Yii::app()->createUrl('maaltijdtype');
-//                                $menuItems['Maaltijdsubtypen'] = Yii::app()->createUrl('maaltijdsubtype');
-//                                $menuItems['Zoekpagina'] = Yii::app()->createUrl('search');
-//                                $menuItems['Instelling Zoekpagina'] = Yii::app()->createUrl('maaltijdzoekfilter');
-//                            }
-//
-//                            foreach($menuItems as $title=>$url) {
-//                                if (isOnPage($url)) {
-//                                    $active = 'active';
-//                                } else {
-//                                    $active = '';
-//                                }
-//                                echo "<li class=\"$active\"><a href=\"$url\">$title</a></li>";
-//                            }
                             if (!Yii::app()->user->isGuest) {
                                 $menuItems[] = array(
                                     'title'=>'Maaltijden',
@@ -108,6 +91,11 @@
                                     'title'=>'Maaltijdsubtypen',
                                     'type'=>'item',
                                     'url'=>Yii::app()->createUrl('maaltijdsubtype'),
+                                );
+                                $menuItems[] = array(
+									'title'=>'Productgroepen',
+									'type'=>'item',
+									'url'=>Yii::app()->createUrl('productgroep'),
                                 );
                                 $menuItems[] = array(
                                     'title'=>'Zoekpagina',
@@ -193,11 +181,6 @@
     </nav>
 
     <div class="container">
-<!--
-        <div class="row">
-            <?php echo Render::menu($this->menu, Yii::app()->request->requestUri)?>
-        </div>
--->
         <div class="row">
             <div class="col-md-12">
                 <?php echo $content ?>
