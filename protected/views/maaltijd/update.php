@@ -41,7 +41,14 @@
 
     $attributes = array();
     $attribute = array();
-    $attribute['label'] = 'type';
+    $attribute['label'] = 'Productgroep';
+    $attribute['values'][] = addField($model, 'productgroep_id');
+    $attribute['valueOptions'] = $productgroepDescriptions;
+    $attribute['display']['displayAs'] = 'dropdown';
+    $attributes[] = $attribute;
+
+    $attribute = array();
+    $attribute['label'] = 'Type';
     $attribute['values'][] = addField($model, 'maaltijdtype_id');
     $attribute['valueOptions'] = $typeDescriptions;
     $attribute['display']['displayAs'] = 'dropdown';

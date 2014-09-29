@@ -1,5 +1,13 @@
 <?php
+/**
+ * @copyright Copyright &copy; Brainpower Solutions.nl, 2014
+ */
 
+	/**
+	 * Maaltijd Model.
+	 *
+	 * @author Barry M. van Kessel <bmvankessel@brainpowersolutions.nl>
+	 */
     class Maaltijd extends CCustomActiveRecord {
 
         public function search() {
@@ -159,8 +167,10 @@
 
         public function relations() {
             return array(
+                'productgroep'=>array(self::BELONGS_TO, 'Productgroep', 'productgroep_id'),
                 'maaltijdtype'=>array(self::BELONGS_TO, 'Maaltijdtype', 'maaltijdtype_id'),
                 'maaltijdsubtype'=>array(self::BELONGS_TO, 'Maaltijdsubtype', 'maaltijdsubtype_id'),
+                'productgroep'=>array(self::BELONGS_TO, 'Maaltijdsubtype', 'maaltijdsubtype_id'),
             );
         }
 

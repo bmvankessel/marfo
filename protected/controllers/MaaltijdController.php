@@ -123,11 +123,13 @@ class MaaltijdController extends Controller {
 
             $maaltijdtype = new Maaltijdtype();
             $maaltijdsubtype = new Maaltijdsubtype();
+            $productgroep = new Productgroep();
             $this->render(
                     "update",
                     array(
                         'model'=>$model,
                         'updateAllowed'=>(Yii::app()->user->isGuest == false),
+                        'productgroepDescriptions'=>$productgroep->omschrijvingen(),
                         'typeDescriptions'=>$maaltijdtype->omschrijvingen(),
                         'subTypeDescriptions'=>$maaltijdsubtype->omschrijvingen(),
                     )
