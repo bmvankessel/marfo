@@ -23,11 +23,11 @@ function actionModalMaaltijdfilter() {
 		});
 	} else {
 		data = JSON.stringify({
-			'id': 0,
-			'productgroep-id': 0,
-			'maaltijdtype-id': 0,
-			'maaltijdsubtype-id': 0,
-			'tooltip' : '',
+			'id': getModalMaaltijdfilterValue('id', false),
+			'productgroep-id': getModalMaaltijdfilterValue('productgroep-id', false, 'select'),
+			'maaltijdtype-id': getModalMaaltijdfilterValue('maaltijdtype-id', false, 'select'),
+			'maaltijdsubtype-id': getModalMaaltijdfilterValue('maaltijdsubtype-id', false, 'select'),
+			'tooltip' : getModalMaaltijdfilterValue('tooltip', false, 'textarea'),
 		});
 	}
 	
@@ -46,7 +46,8 @@ function actionModalMaaltijdfilter() {
 				displayModalMaaltijdfilterAsMessageBox('Het maaltijdfilter is toegevoegd.\nNa het sluiten van de melding wordt de lijst ververst.');
 			} else {
 				//$("#lup_" + id).find("td[name='description']").text(description);
-				displayModalMaaltijdfilterAsMessageBox('Het maaltijdfilter is gewijzigd.');
+				$("#btn-maaltijdfilter-close").unbind('click').click(function() {location.reload()});
+				displayModalMaaltijdfilterAsMessageBox('Het maaltijdfilter is gewijzigd.\nNa het sluiten van de melding wordt de lijst ververst.');
 			}
 		}
 	})
@@ -119,6 +120,21 @@ function getModalMaaltijdfilterActionUrl(modalFormDelete) {
 }
 
 /**
+ * Initialize the modal form.
+ */
+function initModalMaaltijdfilter() {
+	if (modusModalMaaltijdfilterIsCreate()) {
+		clearModalMaaltijdfilterValue();
+		setModalMaaltijdfilterActionButtonCaption('Toevoegen');
+	} else {
+		setModalMaaltijdfilterActionButtonCaption('Wijzigen');
+}
+	showModalMaaltijdfilterEntryControls();
+	showModalMaaltijdfilterActionButton();
+	showModalMaaltijdfilterMessage('');
+}
+
+/**
  * Returns the value of a control within modal.
  * 
  * @param string name				Control name.
@@ -174,6 +190,45 @@ function openModalMaaltijdfilterCreate() {
 }
 
 /**
+ * Sets the caption of the action button.
+ * 
+ * @param string caption			Caption for the action button.
+ * @param boolean modalFormDelete	Form containing the button.
+ */
+function setModalMaaltijdfilterActionButtonCaption(caption, modalFormDelete) {
+	modalFormDelete = defaultTo(modalFormDelete, false);
+	if (modalFormDelete === true) {
+		$("#btn-maaltijdfilter-delete").text(caption);
+	} else {
+		$("#btn-maaltijdfilter-action").text(caption);
+	}
+}
+
+/**
+ * Opens modal for updating maaltijdfilter.
+ * 
+ * @param object column	Html action column clicked.
+ */
+function openModalMaaltijdfilterUpdate(htmlColumn) {
+	setModalMaaltijdfilterModus(false);
+	row = htmlColumn.closest("tr");
+	id =  getColumnValue(row, 'id');
+	productgroepId = getColumnValue(row, 'productgroep-id');
+	maaltijdtypeId = getColumnValue(row, 'maaltijdtype-id');
+	maaltijdsubtypeId = getColumnValue(row, 'maaltijdsubtype-id');
+	tooltip = getColumnValue(row, 'tooltip');
+	// Set the id for the row so it can be identified for a text update.
+	row.attr('id', 'fltr_' + id);
+	setModalMaaltijdfilterModus(false);
+	setModalMaaltijdfilterValue('id',id, false);
+	setModalMaaltijdfilterValue('productgroep-id',productgroepId, false, 'select');
+	setModalMaaltijdfilterValue('maaltijdtype-id',maaltijdtypeId, false, 'select');
+	setModalMaaltijdfilterValue('maaltijdsubtype-id',maaltijdsubtypeId, false, 'select');
+	setModalMaaltijdfilterValue('tooltip',tooltip, false, 'textarea');
+	$("#modal-maaltijdfilter").modal('show');
+}
+
+/**
  * Sets the modus of modal maaltijdfilter.
  * 
  * @param boolean create	Modus create (true) or update (true).
@@ -199,7 +254,22 @@ function setModalMaaltijdfilterValue(name, value, modalFormDelete, controlType) 
 	control = getModalMaaltijdfilterForm(modalFormDelete).find(selector);
 	
 	if (control.length > 0) {
-		control.val(value);
+		switch(controlType) {
+			case 'select':
+				selector = "option[value='" + value + "']";
+				item = control.find(selector);
+				if (item.length >0) {
+					item.attr('selected', true);
+				} else {
+					alert('Select item cannot be found with selector "' + selector + "'");
+				}
+				break;
+
+			default:
+				control.val(value);
+				break;
+		}
+		
 	} else {
 		alert('Control cannot be found with selector "' + selector + "'");
 	}
@@ -208,11 +278,11 @@ function setModalMaaltijdfilterValue(name, value, modalFormDelete, controlType) 
 /**
  * Shows or hides the confirm button.
  * 
- * @param boolean show				Show / hide the confirm button.
+ * @param boolean showButton				Show / hide the confirm button.
  * @param boolean modalFormDelete	Target form delete (true) or create/update (false).
  */
-function showModalMaaltijdfilterActionButton(show, modalFormDelete) {
-	show = defaultTo(show, true);
+function showModalMaaltijdfilterActionButton(showButton, modalFormDelete) {
+	showButton = defaultTo(showButton, true);
 	modalFormDelete = defaultTo(modalFormDelete, false);
 
 	if (modalFormDelete === true) {
@@ -221,7 +291,7 @@ function showModalMaaltijdfilterActionButton(show, modalFormDelete) {
 		button = $("#btn-maaltijdfilter-action");
 	}
 
-	if (show === true) {
+	if (showButton === true) {
 		show(button);
 	} else {
 		hide(button);
@@ -231,12 +301,12 @@ function showModalMaaltijdfilterActionButton(show, modalFormDelete) {
 /**
  * Shows or hides the input controls.
  * 
- * @param boolean show	Show / hide the entry controls.
+ * @param boolean showControls	Show / hide the entry controls.
  */
-function showModalMaaltijdfilterEntryControls(show) {
-	show = defaultTo(show, true);
+function showModalMaaltijdfilterEntryControls(showControls) {
+	showControls = defaultTo(showControls, true);
 	form = $("#form-maaltijdfilter");
-	if (show === true) {
+	if (showControls === true) {
 		show(form);
 	} else {
 		hide(form);
@@ -282,6 +352,10 @@ $(document).ready(function() {
 	$("#btn-maaltijdfilter-add").click(function() {
 		openModalMaaltijdfilterCreate();
 	});
+	
+	$("#modal-maaltijdfilter").on('show.bs.modal', function() {
+		initModalMaaltijdfilter();
+	});	
 	
 	$("#btn-maaltijdfilter-action").click(function() {
 		actionModalMaaltijdfilter();

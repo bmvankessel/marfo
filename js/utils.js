@@ -10,6 +10,28 @@
 	 return (typeof(value) === 'undefined') ? defaultValue : value;
  }
 
+/**
+ * Returns the value (text) of an HTML column.
+ *
+ * @param object row (jQuery).
+ * @param string attributeName.
+ *
+ * @return string	Value of the column.
+ *
+ */
+function getColumnValue(row, attributeName) {
+	selector = "td[name='" + attributeName + "']";
+	column = row.find(selector);
+
+	if (column.length > 0) {
+		return column.text();
+	} else {
+		alert('Column cannot be found with selector "' + selector + "'");
+	}
+}
+
+
+
 /*
  * Returns the url as stored in a hidden field of the document
  */

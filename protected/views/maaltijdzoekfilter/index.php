@@ -29,11 +29,12 @@
                     'update'=>array(
                         'label'=>'',
                         'imageUrl'=>'',
-                        'url'=>'$this->grid->controller->createUrl("update", array("id"=>$data->id))',
+                        'url'=>'',
                         'options'=>array(
                             'class'=>'glyphicon glyphicon-pencil',
                             'title'=>'Wijzigen',
                         ),
+                        'click'=>'js:function(evt){evt.preventDefault();openModalMaaltijdfilterUpdate($(this));}',
                     ),
                     'del'=>array(
                         'label'=>'',
@@ -68,27 +69,52 @@
                 'htmlOptions'=>array('class'=>'col-md-2'),
                 'name'=>'Productgroep',
                 'value'=>'$data->productgroep->omschrijving',
+                'htmlOptions'=>array('name'=>'productgroep'),
             ),
             array(
                 'htmlOptions'=>array('class'=>'col-md-2'),
                 'name'=>'Maaltijdtype',
                 'value'=>'$data->maaltijdtype->omschrijving',
+                'htmlOptions'=>array('name'=>'maaltijdtype'),
             ),
             array(
                 'htmlOptions'=>array('class'=>'col-md-2'),
                 'name'=>'Maaltijdsubtype',
                 'value'=>'substr($data->maaltijdsubtype->omschrijving,0,50)',
+                'htmlOptions'=>array('name'=>'maaltijdsubtype'),
             ),
             array(
                 'htmlOptions'=>array('class'=>'col-md-5'),
                 'name'=>'Tooltip',
                 'value'=>'$data->tooltip',
+                'htmlOptions'=>array('name'=>'tooltip'),
             ),
             array(
                 'name'=>'Id',
                 'headerHtmlOptions'=>array('class'=>'hidden'),
                 'htmlOptions'=>array('name'=>'id', 'class'=>'hidden'),
                 'value'=>'$data->id',
+                'visible'=>'false',
+            ),
+            array(
+                'name'=>'Productgroep Id',
+                'headerHtmlOptions'=>array('class'=>'hidden'),
+                'htmlOptions'=>array('name'=>'productgroep-id', 'class'=>'hidden'),
+                'value'=>'$data->productgroep_id',
+                'visible'=>'false',
+            ),
+            array(
+                'name'=>'Maaltijdtype Id',
+                'headerHtmlOptions'=>array('class'=>'hidden'),
+                'htmlOptions'=>array('name'=>'maaltijdtype-id', 'class'=>'hidden'),
+                'value'=>'$data->maaltijdtype_id',
+                'visible'=>'false',
+            ),
+            array(
+                'name'=>'Maaltijdsubtype Id',
+                'headerHtmlOptions'=>array('class'=>'hidden'),
+                'htmlOptions'=>array('name'=>'maaltijdsubtype-id', 'class'=>'hidden'),
+                'value'=>'$data->maaltijdsubtype_id',
                 'visible'=>'false',
             ),
             array(

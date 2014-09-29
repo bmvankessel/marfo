@@ -73,10 +73,14 @@ class MaaltijdzoekfilterController extends Controller {
     /**
 	 * Creates a maaltijdfilter;
 	 *
-	 * @param string $_POST['data']		JSON encoded description of the lookup value.
+	 * @param string $_POST['data']		JSON encoded maaltijdfilter data.
+	 * 									- productgroep-id
+	 * 									- maaltijdtype-id
+	 * 									- maaltijdsubtype-id
+	 * 									- tooltip
 	 *
-	 * @return string 					Status of the request including the id of the newly created 
-	 * 									lookup value.
+	 * @return string 					Status of the create request including the id of the newly 
+	 * 									created maaltijdfilter.
 	 */
     public function actionCreate() {
 		$result['status'] = 'not ok';
@@ -91,7 +95,7 @@ class MaaltijdzoekfilterController extends Controller {
 			if ($model->save()) {
 				$result['status'] = 'ok';
 			} else {
-				$result['message'] = 'Lookup value for maaltijdfilter could not be saved.';
+				$result['message'] = 'Maaltijdfilter could not be saved.';
 			}
 		} else {
 			$result['message'] = $message;
@@ -100,7 +104,48 @@ class MaaltijdzoekfilterController extends Controller {
         Yii::app()->end();
 	}
 
-    public function actionUpdate($id=0) {
+    /**
+	 * Updates specified maaltijdfilter;
+	 *
+	 * @param string $_POST['data']		JSON encoded maaltijdfilter data:
+	 * 									- id
+	 * 									- productgroep-id
+	 * 									- maaltijdtype-id
+	 * 									- maaltijdsubtype-id
+	 * 									- tooltip
+	 *
+	 * @return string 					Status of the update request.
+	 */
+    public function actionUpdate() {
+		$result['status'] = 'not ok';
+		$result['action'] = 'update';
+		
+		if ($this->getPostData(
+			array('id','productgroep-id', 'maaltijdtype-id', 'maaltijdsubtype-id', 'tooltip'), 
+			$data, $message)) 
+		{
+			$model = Maaltijdzoekfilter::model()->findByPk($data['id']);			
+			if ($model !== null) {
+				$model->productgroep_id = $data['productgroep-id'];
+				$model->maaltijdtype_id = $data['maaltijdtype-id'];
+				$model->maaltijdsubtype_id = $data['maaltijdsubtype-id'];
+				$model->tooltip = $data['tooltip'];
+				if ($model->save()) {
+					$result['status'] = 'ok';
+				} else {
+					$result['message'] = 'Maaltijdfilter could not be saved.';
+				}
+			} else {
+				$result['message'] = 'Maaltijdfilter could not be found [id=' . $data['id'] . ']';
+			}
+		} else {
+			$result['message'] = $message;
+		}
+		echo json_encode($result);
+        Yii::app()->end();
+	}
+
+    public function _actionUpdate($id=0) {
         if (Yii::app()->request->isPostRequest) {
             // update maaltijdzoekfilter
             
