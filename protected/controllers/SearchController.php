@@ -171,6 +171,7 @@ class SearchController extends Controller {
         } else {
             $selectedMenu = array(
                 'selectFirstGroup'=>true, 
+                'mainGroup'=>'',
                 'group'=>'', 
                 'subgroup'=>'', 
                 'component'=>''

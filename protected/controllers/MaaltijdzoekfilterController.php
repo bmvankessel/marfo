@@ -18,7 +18,7 @@ class MaaltijdzoekfilterController extends Controller {
      * @param array $data		Posted 'data' values if function returns true.
      * @param string $message	Message specifying missing values if function returns false. 
      * 
-     * @return					If post contains the expected data.
+     * @return boolean			If post contains the expected data.
      */
     public function getPostData(array $entries, &$data, &$message) {
 		$data = null;

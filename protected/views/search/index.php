@@ -1,3 +1,14 @@
+<?php
+/**
+ * @copyright Copyright &copy; Brainpower Solutions.nl, 2014
+ */
+
+/**
+ * Renders the search page.
+ * 
+ * @author Barry M. van Kessel <bmvankessel@brainpowersolutions.nl>
+ */
+?>
 <div class="row test">
     <div class="col-md-2">
         <h1>Producten</h1>
@@ -18,17 +29,11 @@
     echo CHtml::endForm();
 ?>
     </div>
-    <div class="col-md-6">
-    </div>
 </div>
 
 <div class="row">
     <div class="col-md-2 search">
-
-        <?php
-            echo Render::searchNavigation($model->searchNavigation($selectedMenu));
-        ?>
-
+        <?=Render::searchNavigation($model->searchNavigation($selectedMenu));?>
     </div>
     <div class="col-md-10">
 

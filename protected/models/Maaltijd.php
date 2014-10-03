@@ -316,190 +316,136 @@ public static function model($className=__CLASS__)
 	return parent::model($className);
 }
 
-private function addComponents($subgroupSelected, $selectedMenu) {
-	$components = array();
-	$components[] = array(
-		'name'=>'Alles',
-		'field'=>'',
-		'selected'=> ($subgroupSelected && 'Alles' == $selectedMenu['component']) ? true : false,
-	);
-
-	foreach ($this->componentAttributes() as $field=>$name) {
+	/**
+	 * Creates the component entries.
+	 * 
+	 * @param string $subgroupSelected			Name of the selected subgroup.
+	 * @param array $selectedMenu				Item selected for each of the menu levels mainGroup, 
+	 * 											group and subgroup.
+	 * 
+	 * @return array							Components.
+	 */
+	private function addComponents($subgroupSelected, $selectedMenu) {
+		$components = array();
 		$components[] = array(
-			'name'=>$name,
-			'field'=>$field,
-			'selected'=> ($subgroupSelected && $name == $selectedMenu['component']) ? true : false,
+			'name'=>'Alles',
+			'field'=>'',
+			'selected'=> ($subgroupSelected && 'Alles' == $selectedMenu['component']) ? true : false,
 		);
+
+		foreach ($this->componentAttributes() as $field=>$name) {
+			$components[] = array(
+				'name'=>$name,
+				'field'=>$field,
+				'selected'=> ($subgroupSelected && $name == $selectedMenu['component']) ? true : false,
+			);
+		}
+		return $components;
 	}
-	return $components;
-}
 
-private function _addSubgroup($name, $description, $subgroupIds, $selectedMenu) {
-	$subgroup = array();
-	$subgroup['name'] = $name;
-	$subgroup['selected'] = ($name == $selectedMenu['subgroup']) ? true : false;
-	$subgroup['description'] = $description;
-	$name = strtolower($name);
-	$subgroup['id'] = (key_exists($name, $subgroupIds)) ? $subgroupIds[$name] : -1;
-	$subgroup['components'] = $this->addComponents($subgroup['selected'], $selectedMenu);
-	return $subgroup;
-}
+	/**
+	 * Creates a subgroup entry.
+	 * 
+	 * @param string $name			Subgroup name.
+	 * @param string $description	Subgroup description.
+	 * @param integer $id			Subgroup id.
+	 * @param array $selectedMenu	Item selected for each of the menu levels mainGroup, group and 
+	 * 								subgroup.
+	 * 
+	 * @return array				Subgroup data.
+	 */
+	private function addSubgroup($name, $description, $id, $selectedMenu) {
+		$subgroup = array();
+		$subgroup['name'] = $name;
+		$subgroup['selected'] = ($name == $selectedMenu['subgroup']) ? true : false;
+		$subgroup['description'] = $description;
+		$subgroup['id'] = $id;
+		$subgroup['components'] = $this->addComponents($subgroup['selected'], $selectedMenu);
+		return $subgroup;
+	}
 
-private function _addGroup($name,array $groupIds, $selectedMenu) {
-	$group = array();
-	$group['name'] = $name;
-	$group['selected'] = ($name == $selectedMenu['group']) ? true : false;
-	$name = strtolower($name);
-	$group['id'] = (key_exists($name, $groupIds)) ? $groupIds[$name] : -1;
-	$group['subgroup'] = array();
-	return $group;
-}
-
-
-private function addSubgroup($name, $description, $id, $selectedMenu) {
-	$subgroup = array();
-	$subgroup['name'] = $name;
-	$subgroup['selected'] = ($name == $selectedMenu['subgroup']) ? true : false;
-	$subgroup['description'] = $description;
-	$subgroup['id'] = $id;
-	$subgroup['components'] = $this->addComponents($subgroup['selected'], $selectedMenu);
-	return $subgroup;
-}
-
-  private function addGroup($name, $id, $selectedMenu) {
+	/**
+	 * Creates a group entry.
+	 * 
+	 * @param string $name			Group name.
+	 * @param integer $id			Group id.
+	 * @param array $selectedMenu	Item selected for each of the menu levels mainGroup, group and 
+	 * 								subgroup.
+	 * 
+	 * @return array				Group data.
+	 */
+	private function addGroup($name, $id, $selectedMenu) {
 	$group = array();
 	$group['name'] = $name;
 	$group['selected'] = ($name == $selectedMenu['group']) ? true : false;
 	$group['id'] = $id;
 	$group['subgroup'] = array();
-	$group['x'] = array();
 	return $group;
-}
-
-private function addMainGroup($name, $id, $selectedMenu) {
-	$mainGroup = array();
-	$mainGroup['name'] = $name;
-	$mainGroup['selected'] = ($name === $selectedMenu['mainGroup']) ? true: false;
-	$mainGroup['id'] = $id;
-	$mainGroup['group'] = array();
-	return $mainGroup;
-}
-
-/**
- * Builds the search tree: productgroep -> maaltijdtype -> maaltijdsubtype as defined by
- * maaltijdzoekfilter.
- *
- * @param
- *
- * @return array	Search tree.
- *
- */
-public function searchNavigation($selectedMenu) {
-	$navigation['mainGroup'] = array();
-	//$mainGroup = null;
-	//$group = null;
-	$currentMainGroup = 0;
-	$currentGroup = 0;
-	$currentSubgroup = 0;
-	
-	$criteria = new CDbCriteria();
-	$criteria->order = 'sequence';
-	
-	$idxMainGroup = -1;
-	$idxGroup = -1;
-	
-	foreach(Maaltijdzoekfilter::model()->All($criteria) as $zoekfilter) {
-		if ($currentMainGroup != $zoekfilter->productgroep_id) {
-			// new main group
-			$navigation['mainGroup'][] = $this->addMainGroup($zoekfilter->productgroep->omschrijving, $zoekfilter->productgroep_id, $selectedMenu);
-			$currentMainGroup = $zoekfilter->productgroep_id;
-			$currentGroup = 0;
-			$idxMainGroup++;
-			$idxGroup = -1;
-		}
-		
-		if ($currentGroup !== $zoekfilter->maaltijdtype_id) {
-			// new group
-			$navigation['mainGroup'][$idxMainGroup]['group'][] =
-				$this->addGroup($zoekfilter->maaltijdtype->omschrijving, $zoekfilter->maaltijdtype_id, $selectedMenu);
-			$currentGroup = $zoekfilter->maaltijdtype_id;
-			$idxGroup++;
-		}
-		
-		$navigation['mainGroup'][$idxMainGroup]['group'][$idxGroup]['subgroup'][] =
-			$this->addSubgroup($zoekfilter->maaltijdsubtype->omschrijving, $zoekfilter->tooltip , $zoekfilter->maaltijdsubtype_id, $selectedMenu);				
 	}
 
-	return $navigation;
-}
+	/**
+	 * Creates a main group entry.
+	 * 
+	 * @param string $name			Main group name.
+	 * @param integer $id			Main group id.
+	 * @param array $selectedMenu	Item selected for each of the menu levels mainGroup, group and 
+	 * 								subgroup.
+	 * 
+	 * @return array				Main group data.
+	 */
+	private function addMainGroup($name, $id, $selectedMenu) {
+		$mainGroup = array();
+		$mainGroup['name'] = $name;
+		$mainGroup['selected'] = ($name === $selectedMenu['mainGroup']) ? true: false;
+		$mainGroup['id'] = $id;
+		$mainGroup['group'] = array();
+		return $mainGroup;
+	}
 
-public function __searchNavigation($selectedMenu) {
-	$navigation['group'] = array();
-	$group = null;
-	$currentGroup = 0;
-	foreach(Maaltijdzoekfilter::model()->All() as $zoekfilter) {
-		if ($currentGroup != $zoekfilter->maaltijdtype_id) {
-			if ($group !== null) {
-				$navigation['group'][] = $group;
+	/**
+	 * Builds the search tree: productgroep -> maaltijdtype -> maaltijdsubtype as defined by
+	 * maaltijdzoekfilter.
+	 *
+	 * @param array $selectedMenu	Item selected for each of the menu levels mainGroup, group and 
+	 * 								subgroup.
+	 *
+	 * @return array				Search tree.
+	 *
+	 */
+	public function searchNavigation($selectedMenu) {
+		$navigation['mainGroup'] = array();
+		//$mainGroup = null;
+		//$group = null;
+		$currentMainGroup = 0;
+		$currentGroup = 0;
+		$currentSubgroup = 0;
+		
+		$criteria = new CDbCriteria();
+		$criteria->order = 'sequence';
+		
+		$idxMainGroup = -1;
+		$idxGroup = -1;
+		
+		foreach(Maaltijdzoekfilter::model()->All($criteria) as $zoekfilter) {
+			if ($currentMainGroup != $zoekfilter->productgroep_id) {
+				// new main group
+				$navigation['mainGroup'][] = $this->addMainGroup($zoekfilter->productgroep->omschrijving, $zoekfilter->productgroep_id, $selectedMenu);
+				$currentMainGroup = $zoekfilter->productgroep_id;
+				$currentGroup = 0;
+				$idxMainGroup++;
+				$idxGroup = -1;
 			}
-			// new group
-			$group = $this->addGroup($zoekfilter->maaltijdtype->omschrijving, $zoekfilter->maaltijdtype_id, $selectedMenu);
-			$currentGroup = $zoekfilter->maaltijdtype_id;
-		}
-		$group['subgroup'][] = $this->addSubgroup($zoekfilter->maaltijdsubtype->omschrijving, $zoekfilter->tooltip, $zoekfilter->maaltijdsubtype_id, $selectedMenu);
-	}
-
-	if ($group !== null) {
-		$navigation['group'][] = $group;
-	}
-
-	return $navigation;
-}
-
-
-	public function _searchNavigation($selectedMenu) {
-		$type = new Maaltijdtype();
-		$groups = array_change_key_case($type->omschrijvingenNaarId());
-		$subtype = new Maaltijdsubtype();
-		$subgroups = array_change_key_case($subtype->omschrijvingenNaarId());
-
-		$navigation = array();
-		$navigation['group'] = array();
-
-		$group = $this->addGroup('Reguliere Maaltijden', $groups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Regulier', '', $subgroups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Extra gaar', 'De componenten in deze maaltijden zijn gaar gekookt en daardoor zacht en makkelijk kauwbaar', $subgroups, $selectedMenu);
-		$navigation['group'][] = $group;
-
-		$group = $this->addGroup('Specials',$groups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Feestmaaltijden', 'Maaltijden geschikt voor zon- en feestdagen', $subgroups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Kindermaaltijden', 'Maaltijden die qua componenten en hoeveelheid speciaal ontwikkeld zijn voor kinderen', $subgroups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Bijgerechtjes', 'Gerechtjes die bij een maaltijd kunnen worden geserveerd', $subgroups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Authentieke wereldgerechten', 'Gerechten bereid volgens authentieke receptuur uit diverse landen', $subgroups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Kleine gerechten', 'Gerechten met een gemiddeld totaalgewicht van 300 gram, met een relatief hoog aandeel eiwit.', $subgroups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Minigerechtjes', 'Gerechtjes die voldoen aan de snaq-eisen 150-200 kcal / 5-10 gram eiwit', $subgroups, $selectedMenu);
-		$navigation['group'][] = $group;
-
-		$group = $this->addGroup('Dieetmaaltijden',$groups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Feestmaaltijden', 'Geen zout toegevoegd (max 450 mg natrium), gluten en lactosevrij', $subgroups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Strikt natriumbeperkt', 'Geen zout toegevoegd (max 450 mg natrium), gluten en lactosevrij', $subgroups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Allergenenvrij', 'Vrij van allergenen', $subgroups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Licht natriumbeperkt', 'Max 650 mg natrium', $subgroups, $selectedMenu);
-		$navigation['group'][] = $group;
-
-		$group = $this->addGroup('Gepureerde maaltijden', $groups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Regulier', '', $subgroups, $selectedMenu);
-		$navigation['group'][] = $group;
-
-		$group = $this->addGroup('Jus en sauzen', $groups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Regulier', '', $subgroups, $selectedMenu);
-		$group['subgroup'][] = $this->addSubgroup('Dieet', 'Productomschrijving maakt duidelijk voor welk "dieet" de jus geschikt is.', $subgroups, $selectedMenu);
-		$navigation['group'][] = $group;
-
-		if ($selectedMenu['selectFirstGroup']) {
-			$navigation['group'][0]['selected'] = true;
-			$navigation['group'][0]['subgroup'][0]['selected'] = true;
-			$navigation['group'][0]['subgroup'][0]['components'][0]['selected'] = false;
+			
+			if ($currentGroup !== $zoekfilter->maaltijdtype_id) {
+				// new group
+				$navigation['mainGroup'][$idxMainGroup]['group'][] =
+					$this->addGroup($zoekfilter->maaltijdtype->omschrijving, $zoekfilter->maaltijdtype_id, $selectedMenu);
+				$currentGroup = $zoekfilter->maaltijdtype_id;
+				$idxGroup++;
+			}
+			
+			$navigation['mainGroup'][$idxMainGroup]['group'][$idxGroup]['subgroup'][] =
+				$this->addSubgroup($zoekfilter->maaltijdsubtype->omschrijving, $zoekfilter->tooltip , $zoekfilter->maaltijdsubtype_id, $selectedMenu);				
 		}
 
 		return $navigation;
