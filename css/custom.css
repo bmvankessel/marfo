@@ -11,7 +11,7 @@ div.header-with-icon span.fa{
     color: #94be3e;
 }
 
-span[role=edit]:hover, span[role=cancel]:hover, span[role=save]:hover {
+span[role=edit]:hover, span[role=cancel]:hover, span[role=save]:hover, .component {
     cursor: pointer;
     cursor: hand;
 }
@@ -484,4 +484,13 @@ div.panel-body {
 .meal:hover {
     cursor: pointer;
     cursor: hand;   
+}
+
+.component > a:hover {
+    color: #94c03d;
+}
+
+.component.component-selected > a {
+	color: #94c03d;
+	font-weight: bold;
 }

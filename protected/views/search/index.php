@@ -98,6 +98,10 @@
             }
 
             dotdotdot();
+            
+            $(".component").click(function() {
+				window.location = $(this).attr('target');
+            });
 dot;
 
     Yii::app()->clientScript->registerScript('dotted', $script, CClientScript::POS_READY);
