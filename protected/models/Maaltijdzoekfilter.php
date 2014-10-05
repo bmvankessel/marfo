@@ -43,8 +43,77 @@ class Maaltijdzoekfilter extends CCustomActiveRecord {
     public function All() {
         return $this->findAll(array('order'=>'sequence'));
     }
-    
+
+	/**
+	 * Moves the zoekfilter one place up (= decreasing the sequence) within the zoekfilters.
+	 * 
+	 * @param integer $id	Id identifying the zoekfilter.
+	 */
     public function moveUp($id) {
+		$zoekfilters = $this->findAll(array(
+			'order'=>'sequence desc', 
+		));
+
+		/* add the sequence numbers to be assigned to an array stack */
+		$sequenceNumbers = array();
+		for ($i=1;$i<=count($zoekfilters);$i++) {
+			array_push($sequenceNumbers, $i);
+		}
+
+		/* loop through all zoekfilters and change sequence */
+		foreach ($zoekfilters as $zoekfilter) {
+			/* get next available sequence number */
+			$currentSequenceNumber = array_pop($sequenceNumbers);
+			if ($id == $zoekfilter->id && $currentSequenceNumber != 1) {
+				/* the next sequence number from the stack is needed and the current one must be put 
+				 * back on the stack */
+				$tmp = array_pop($sequenceNumbers);
+				array_push($sequenceNumbers, $currentSequenceNumber);
+				$currentSequenceNumber = $tmp;
+			}
+			if ($zoekfilter->sequence != $currentSequenceNumber) {
+				$zoekfilter->sequence = $currentSequenceNumber;
+				$zoekfilter->save();
+			}
+		}
+	}
+	
+	/**
+	 * Moves the zoekfilter one place down (= incresing the sequence) within the zoekfilters.
+	 * 
+	 * @param integer $id	Id identifying the zoekfilter.
+	 */
+    public function moveDown($id) {
+		$zoekfilters = $this->findAll(array(
+			'order'=>'sequence', 
+		));
+
+		/* add the sequence numbers to be assigned to an array stack */
+		$lastSequenceNumber = count($zoekfilters);
+		$sequenceNumbers = array();
+		for ($i=$lastSequenceNumber;$i>0;$i--) {
+			array_push($sequenceNumbers, $i);
+		}
+				
+		/* loop through all zoekfilters and change sequence */
+		foreach ($zoekfilters as $zoekfilter) {
+			/* get next available sequence number */
+			$currentSequenceNumber = array_pop($sequenceNumbers);
+			if ($id == $zoekfilter->id && $currentSequenceNumber !=$lastSequenceNumber) {
+				/* the next sequence number from the stack is needed and the current one must be put 
+				 * back on the stack */
+				$tmp = array_pop($sequenceNumbers);
+				array_push($sequenceNumbers, $currentSequenceNumber);
+				$currentSequenceNumber = $tmp;
+			}
+			if ($zoekfilter->sequence != $currentSequenceNumber) {
+				$zoekfilter->sequence = $currentSequenceNumber;
+				$zoekfilter->save();
+			}
+		}
+	}	
+    
+    public function _moveUp($id) {
         $previousZoekfilter = null;
         $zoekfilters = $this->All();
         
@@ -81,7 +150,7 @@ class Maaltijdzoekfilter extends CCustomActiveRecord {
         }    
     }
     
-    public function moveDown($id) {
+    public function _moveDown($id) {
         $zoekfilters = $this->All();
         $oekfilterToMove = null;
         
