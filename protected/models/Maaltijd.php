@@ -14,6 +14,7 @@ class Maaltijd extends CCustomActiveRecord {
 		$criteria = new CDbCriteria;
 		$criteria->compare('code', $this->code, true);
 		$criteria->compare('omschrijving', $this->omschrijving, true);
+		$criteria->compare('productgroep_id', $this->productgroep_id);
 		$criteria->compare('maaltijdtype_id', $this->maaltijdtype_id);
 		$criteria->compare('maaltijdsubtype_id', $this->maaltijdsubtype_id);
 		$criteria->compare('component_rund', $this->component_rund);

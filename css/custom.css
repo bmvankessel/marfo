@@ -486,11 +486,17 @@ div.panel-body {
     cursor: hand;   
 }
 
-.component > a:hover {
+.component:hover {
     color: #94c03d;
 }
 
-.component.component-selected > a {
+.component {
+	font-size: 10px;
+	height: 20px;
+	color: black;
+}
+
+.component.component-selected {
 	color: #94c03d;
 	font-weight: bold;
 }

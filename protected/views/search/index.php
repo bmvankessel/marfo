@@ -100,7 +100,21 @@
             dotdotdot();
             
             $(".component").click(function() {
-				window.location = $(this).attr('target');
+				var fields = JSON.parse($(this).attr("data"));
+				var form = $("#post-search");
+
+				form.find("input[name='Search[productgroep_id]']").val(fields['Search[productgroep_id]']);
+				form.find("input[name='Search[maaltijdtype_id]']").val(fields['Search[maaltijdtype_id]']);
+				form.find("input[name='Search[maaltijdsubtype_id]']").val(fields['Search[maaltijdsubtype_id]']);
+				form.find("input[name='Selected[mainGroup]']").val(fields['Selected[mainGroup]']);
+				form.find("input[name='Selected[group]']").val(fields['Selected[group]']);
+				form.find("input[name='Selected[subgroup]']").val(fields['Selected[subgroup]']);
+				form.find("input[name='Selected[component]']").val(fields['Selected[component]']);
+				if (fields['component'].length > 0) {
+					field = form.find("input[data-role=component]");
+					field.attr('name', 'Search[' + fields['component'] + ']');
+				}
+				form.submit();
             });
 dot;
 

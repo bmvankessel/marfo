@@ -149,22 +149,68 @@ class SearchController extends Controller {
         echo json_encode($result);
         Yii::app()->end();        
   }
+  
+	/**
+	 * Returns the value form the post or get array.
+	 * First the post and than the get array is checked.
+	 * 
+	 * @param string $field			Name of the field.
+	 * @param mixed $defaultValue	Value if not found.
+	 *
+	 * Returns either the value from the post or get array, or the default value. 
+	 */ 
+//	private function getPostGetValue($field, $defaultvalue) {
+//		if (isset($_POST[$field])) {
+//			return $_POST[$field];
+//		} else {
+//			if (isset($_GET[$field])) {
+//				return $_GET[$field];
+//			} else
+//				return $defaultValue;
+//			}
+//		}
+//	}
     
+    /**
+     * Displays the search page for the meals.
+     * 
+     * The meals to be displayed are filtered by:
+     * - values sent by clicking the search tree
+     * - values entered in one of the search input for code or description.
+     * - no value at all if none of the previous values were received
+     */
     function actionIndex() {
-        
         $model = new Maaltijd('search');
         $model->unsetAttributes();
         
+        /* Values are sent by post or get. Merge the arrays so that one array will be processed */
         $_P_G = array_merge($_POST, $_GET);
 
+		/* 
+		 * Set the model attributes if the search field is set.
+		 * The values are send by clicking the search tree.
+		 */
         if (isset($_P_G['Search'])) {
             $model->setAttributes($_P_G['Search'], false);
+            
+//            var_dump($_P_G);
+//            
+//            echo $model->productgroep_id . '<br>';
+//            echo $model->maaltijdtype_id . '<br>';
+//            echo $model->maaltijdsubtype_id. '<br>';
         }
 
         $selectedGroup = (isset($_P_G['group'])) ? $_P_G['group'] : 0;
+        
+        /* set the values comming from one of the the search inputs */
         $selectedCode = (isset($_P_G['Search']['code'])) ? $_P_G['Search']['code'] : '';
         $selectedDescription = (isset($_P_G['Search']['omschrijving'])) ? $_P_G['Search']['omschrijving'] : '';
         
+        /*
+         * Store the selected search tree elements.
+         * The values will be used to expend the select and show the selected component in the tree
+         * when rendering the page.  
+         */
         if (isset($_P_G['Selected'])) {
             $selectedMenu = $_P_G['Selected'];
             $selectedMenu['selectFirstGroup'] = false;
