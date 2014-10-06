@@ -71,6 +71,7 @@ class Maaltijdzoekfilter extends CCustomActiveRecord {
 				array_push($sequenceNumbers, $currentSequenceNumber);
 				$currentSequenceNumber = $tmp;
 			}
+			/* only save when changes are made */
 			if ($zoekfilter->sequence != $currentSequenceNumber) {
 				$zoekfilter->sequence = $currentSequenceNumber;
 				$zoekfilter->save();
@@ -79,7 +80,7 @@ class Maaltijdzoekfilter extends CCustomActiveRecord {
 	}
 	
 	/**
-	 * Moves the zoekfilter one place down (= incresing the sequence) within the zoekfilters.
+	 * Moves the zoekfilter one place down (= increasing the sequence) within the zoekfilters.
 	 * 
 	 * @param integer $id	Id identifying the zoekfilter.
 	 */
@@ -106,6 +107,7 @@ class Maaltijdzoekfilter extends CCustomActiveRecord {
 				array_push($sequenceNumbers, $currentSequenceNumber);
 				$currentSequenceNumber = $tmp;
 			}
+			/* only save when changes are made */
 			if ($zoekfilter->sequence != $currentSequenceNumber) {
 				$zoekfilter->sequence = $currentSequenceNumber;
 				$zoekfilter->save();

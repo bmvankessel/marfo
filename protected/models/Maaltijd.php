@@ -229,7 +229,7 @@ public function attributeLabels()
 				'component_gevogelte'=>$this->getAttributeLabel('component_gevogelte'),
 				'component_lam'=>$this->getAttributeLabel('component_lam'),
 				'component_rund'=>$this->getAttributeLabel('component_rund'),
-				'component_rund_varken'=>$this->getAttributeLabel('component_rund_varken'),
+//				'component_rund_varken'=>$this->getAttributeLabel('component_rund_varken'),
 				'component_varken'=>$this->getAttributeLabel('component_varken'),
 				'component_vegetarisch'=>$this->getAttributeLabel('component_vegetarisch'),
 				'component_vis'=>$this->getAttributeLabel('component_vis'),
