@@ -69,7 +69,6 @@
             array(
                 'htmlOptions'=>array('class'=>'col-md-2'),
                 'name'=>'Productgroep',
-                //'value'=>'$data->productgroep_id == null',
                 'value'=>'($data->productgroep_id == null) ? "" : echo $data->productgroep->omschrijving',
                 'htmlOptions'=>array('name'=>'productgroep'),
             ),

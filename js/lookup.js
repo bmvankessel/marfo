@@ -305,7 +305,6 @@ function deleteModalLookup() {
 	})
 	.done(function(result) {
 		if (result.status !== 'ok') {
-			alert('not ok');
 			displayModalLookupAsMessageBox(result.message, true, true);
 		} else {
 			$("#btn-lookup-delete-close").unbind('click').click(function() {location.reload()});
