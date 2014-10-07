@@ -415,19 +415,14 @@ public static function model($className=__CLASS__)
 	 */
 	public function searchNavigation($selectedMenu) {
 		$navigation['mainGroup'] = array();
-		//$mainGroup = null;
-		//$group = null;
 		$currentMainGroup = 0;
 		$currentGroup = 0;
 		$currentSubgroup = 0;
 		
-		$criteria = new CDbCriteria();
-		$criteria->order = 'sequence';
-		
 		$idxMainGroup = -1;
 		$idxGroup = -1;
 		
-		foreach(Maaltijdzoekfilter::model()->All($criteria) as $zoekfilter) {
+		foreach(Maaltijdzoekfilter::model()->all() as $zoekfilter) {
 			if ($currentMainGroup != $zoekfilter->productgroep_id) {
 				// new main group
 				$navigation['mainGroup'][] = $this->addMainGroup($zoekfilter->productgroep->omschrijving, $zoekfilter->productgroep_id, $selectedMenu);

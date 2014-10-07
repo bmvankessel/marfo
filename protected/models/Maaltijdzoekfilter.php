@@ -40,8 +40,20 @@ class Maaltijdzoekfilter extends CCustomActiveRecord {
         );
     }
 
-    public function All() {
-        return $this->findAll(array('order'=>'sequence'));
+	/**
+	 * Returns all maaltijdzoekfilter with all referenced lookupvalues set, ordered by sequence.
+	 *
+	 * @return array 	Maaltijdzoekfilter.
+	 */
+    public function all() {
+		$criteria = new CDbCriteria();
+		$criteria->order = 'sequence';
+		$criteria->addCondition(array(
+			'not productgroep_id is null',
+			'not maaltijdtype_id is null',
+			'not maaltijdsubtype_id is null',
+		));
+        return $this->findAll($criteria);
     }
 
 	/**
