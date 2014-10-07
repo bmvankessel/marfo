@@ -14,19 +14,44 @@
 function actionModalMaaltijdfilter() {
 	showModalMaaltijdfilterMessage('', false);
 	
+	var productgroepId = getModalMaaltijdfilterValue('productgroep-id', false, 'select');
+	var maaltijdtypeId = getModalMaaltijdfilterValue('maaltijdtype-id', false, 'select');
+	var maaltijdsubtypeID = getModalMaaltijdfilterValue('maaltijdsubtype-id', false, 'select');
+	var message = '';
+	if (productgroepId == -1) {
+		message += '\n- geen productgroep geselecteerd';
+	}
+	if (maaltijdtypeId == -1) {
+		message += '\n- geen maaltijdtype geselecteerd';
+	}
+	if (maaltijdsubtypeID == -1) {
+		message += '\n- geen maaltijdsubtype geselecteerd';
+	}
+	if (message.length >0 ) {
+		if (modusModalMaaltijdfilterIsCreate()) {
+			message = 'Het maaltijdfilter kan niet worden toegevoegd om de volgende reden(en):' + message; 
+		} else {
+			message = 'Het maaltijdfilter kan niet worden gewijzigd om de volgende reden(en):' + message; 
+		}
+		showModalMaaltijdfilterMessage(message, false, true);
+		return false;
+	}
+	
+	
+	
 	if (modusModalMaaltijdfilterIsCreate()) {
 		data = JSON.stringify({
-			'productgroep-id': getModalMaaltijdfilterValue('productgroep-id', false, 'select'),
-			'maaltijdtype-id': getModalMaaltijdfilterValue('maaltijdtype-id', false, 'select'),
-			'maaltijdsubtype-id': getModalMaaltijdfilterValue('maaltijdsubtype-id', false, 'select'),
+			'productgroep-id': productgroepId,
+			'maaltijdtype-id': maaltijdtypeId,
+			'maaltijdsubtype-id': maaltijdsubtypeID,
 			'tooltip' : getModalMaaltijdfilterValue('tooltip', false, 'textarea'),
 		});
 	} else {
 		data = JSON.stringify({
 			'id': getModalMaaltijdfilterValue('id', false),
-			'productgroep-id': getModalMaaltijdfilterValue('productgroep-id', false, 'select'),
-			'maaltijdtype-id': getModalMaaltijdfilterValue('maaltijdtype-id', false, 'select'),
-			'maaltijdsubtype-id': getModalMaaltijdfilterValue('maaltijdsubtype-id', false, 'select'),
+			'productgroep-id': productgroepId,
+			'maaltijdtype-id': maaltijdtypeId,
+			'maaltijdsubtype-id': maaltijdsubtypeID,
 			'tooltip' : getModalMaaltijdfilterValue('tooltip', false, 'textarea'),
 		});
 	}
@@ -152,6 +177,9 @@ function getModalMaaltijdfilterActionUrl(modalFormDelete) {
 function initModalMaaltijdfilter() {
 	if (modusModalMaaltijdfilterIsCreate()) {
 		clearModalMaaltijdfilterValue();
+		setModalMaaltijdfilterValue('productgroep-id', -1, false, 'select');
+		setModalMaaltijdfilterValue('maaltijdtype-id', -1, false, 'select');
+		setModalMaaltijdfilterValue('maaltijdsubtype-id', -1, false, 'select');
 		setModalMaaltijdfilterActionButtonCaption('Toevoegen');
 	} else {
 		setModalMaaltijdfilterActionButtonCaption('Wijzigen');
@@ -303,14 +331,12 @@ function setModalMaaltijdfilterValue(name, value, modalFormDelete, controlType) 
 	if (control.length > 0) {
 		switch(controlType) {
 			case 'select':
-				if (value.trim().length > 0) {
-					selector = "option[value='" + value + "']";
-					item = control.find(selector);
-					if (item.length >0) {
-						item.attr('selected', true);
-					} else {
-						alert('Select item cannot be found with selector "' + selector + "'");
-					}
+				selector = "option[value='" + value + "']";
+				item = control.find(selector);
+				if (item.length >0) {
+					item.attr('selected', true);
+				} else {
+					alert('Select item cannot be found with selector "' + selector + "'");
 				}
 				break;
 

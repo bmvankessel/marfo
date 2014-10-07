@@ -69,7 +69,7 @@
             array(
                 'htmlOptions'=>array('class'=>'col-md-2'),
                 'name'=>'Productgroep',
-                'value'=>'($data->productgroep_id == null) ? "" : echo $data->productgroep->omschrijving',
+                'value'=>'($data->productgroep_id == null) ? "" : $data->productgroep->omschrijving',
                 'htmlOptions'=>array('name'=>'productgroep'),
             ),
             array(
@@ -101,21 +101,21 @@
                 'name'=>'Productgroep Id',
                 'headerHtmlOptions'=>array('class'=>'hidden'),
                 'htmlOptions'=>array('name'=>'productgroep-id', 'class'=>'hidden'),
-                'value'=>'$data->productgroep_id',
+                'value'=>'($data->productgroep_id === null) ? -1 : $data->productgroep_id',
                 'visible'=>'false',
             ),
             array(
                 'name'=>'Maaltijdtype Id',
                 'headerHtmlOptions'=>array('class'=>'hidden'),
                 'htmlOptions'=>array('name'=>'maaltijdtype-id', 'class'=>'hidden'),
-                'value'=>'$data->maaltijdtype_id',
+                'value'=>'($data->maaltijdtype_id === null) ? -1 : $data->maaltijdtype_id',
                 'visible'=>'false',
             ),
             array(
                 'name'=>'Maaltijdsubtype Id',
                 'headerHtmlOptions'=>array('class'=>'hidden'),
                 'htmlOptions'=>array('name'=>'maaltijdsubtype-id', 'class'=>'hidden'),
-                'value'=>'$data->maaltijdsubtype_id',
+                'value'=>'($data->maaltijdsubtype_id === null) ? -1 : $data->maaltijdsubtype_id',
                 'visible'=>'false',
             ),
             array(
@@ -140,19 +140,19 @@
     echo CHtml::closeTag('div');
 
 	$options = Productgroep::model()->findAll(array('order'=>'omschrijving'));
-	$productgroepOptions = array();
+	$productgroepOptions = array(-1=>'');
 	foreach ($options as $option) {
 		$productgroepOptions[$option->id] = $option->omschrijving;
 	}
 
 	$options = Maaltijdtype::model()->findAll(array('order'=>'omschrijving'));
-	$maaltijdtypeOptions = array();
+	$maaltijdtypeOptions = array(-1=>'');
 	foreach ($options as $option) {
 		$maaltijdtypeOptions[$option->id] = $option->omschrijving;
 	}
 
 	$options = Maaltijdsubtype::model()->findAll(array('order'=>'omschrijving'));
-	$maaltijdsubtypeOptions = array();
+	$maaltijdsubtypeOptions = array(-1=>'');
 	foreach ($options as $option) {
 		$maaltijdsubtypeOptions[$option->id] = $option->omschrijving;
 	}
