@@ -303,12 +303,14 @@ function setModalMaaltijdfilterValue(name, value, modalFormDelete, controlType) 
 	if (control.length > 0) {
 		switch(controlType) {
 			case 'select':
-				selector = "option[value='" + value + "']";
-				item = control.find(selector);
-				if (item.length >0) {
-					item.attr('selected', true);
-				} else {
-					alert('Select item cannot be found with selector "' + selector + "'");
+				if (value.trim().length > 0) {
+					selector = "option[value='" + value + "']";
+					item = control.find(selector);
+					if (item.length >0) {
+						item.attr('selected', true);
+					} else {
+						alert('Select item cannot be found with selector "' + selector + "'");
+					}
 				}
 				break;
 

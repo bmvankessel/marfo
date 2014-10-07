@@ -25,7 +25,7 @@ abstract class BaseLookupController extends Controller {
 		return array(
 			array(
 				'deny',
-				'actions' => array('relatedparents'),
+				'actions' => array('relatedparents', 'create', 'update', 'delete'),
 				'verbs'=>array('get'),
 			),
 		);
