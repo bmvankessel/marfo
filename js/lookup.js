@@ -228,6 +228,11 @@ function getModalLookupActionUrl(modalFormDelete) {
 	}
 }
 
+function getModalLookupActionUrlCheckRelation() {
+	return getModalLookupForm(true).attr('data-action-relation-check');
+}
+
+
 /**
  * Initialize the modal form.
  */
@@ -354,6 +359,49 @@ function openModalLookupCreate() {
 	$("#modal-lookup-delete").modal('show');	 
  }
 
+function openModalLookupDelete(htmlColumn) {
+	row = htmlColumn.closest("tr");
+	description = row.find("td[name='description']").text();
+	id = row.find("td[name='id']").text();
+	setModalLookupValue('id', id, true);
+	setModalLookupValue('description', description, true);
+	displayModalLookupActionButton(true, true);
+	
+	data= {'id': id}; 
+	data = JSON.stringify(data);
+	
+	$.ajax({
+		method: 'post',
+		url: getModalLookupActionUrlCheckRelation(),
+		data: {'data': data},
+		dataType: 'json',
+	})
+	.done(function(result) {
+		if (result.status !== 'ok') {
+			displayModalLookupAsMessageBox(result.message, true, true);
+		} else {
+			message = "Deze actie verwijdert '" + description + "'";
+			if (result.relations.length >0) {
+				message += ' en er wordt naar verwezen door:\n';
+				
+				for (i=0;i<result.relations.length;i++) {
+					var relation = result.relations[i];
+					message += '- ' + relation.modelNameSingle + ': ' + relation.count + ' x\n';
+				}
+				message += '&nbsp;\nDeze referenties zullen verwijderd worden.\n';
+			} else {
+				message += '.\n';
+			}
+			message += "&nbsp;\nKlik verwijderen om de actie uit te voeren.";
+			showModalLookupMessage(message, true);
+		}
+	})
+	.fail(function(jqXHR, textStatus, errorThrown) {
+		showModalAddLookupMessage('Error: ' + errorThrown);
+	});	
+	$("#modal-lookup-delete").modal('show');
+}
+
 $(document).ready(function() {
 	$("#btn-lookup-action").click(function() {
 		actionModalLookup();
@@ -369,5 +417,5 @@ $(document).ready(function() {
 	
 	$("#btn-lookup-delete-action").click(function() {
 		deleteModalLookup();
-	});
+	});	
 }); 

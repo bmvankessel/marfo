@@ -17,7 +17,7 @@
 				<h3 class="text-center">Verwijderen <?=$this->modelname?></h3>
 			</div> 
 			<div class="modal-body">
-				<form id="form-lookup-delete" class="form-horizontal" data-action-delete="<?=$this->createUrl('delete')?>" role="form">
+				<form id="form-lookup-delete" class="form-horizontal" data-action-delete="<?=$this->createUrl('delete')?>" data-action-relation-check="<?=$this->createUrl('relatedparents')?>" role="form">
 					<input type="hidden" name="id">
 					<input type="hidden" name="description">
 				</form>

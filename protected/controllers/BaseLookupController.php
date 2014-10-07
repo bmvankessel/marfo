@@ -55,10 +55,10 @@ abstract class BaseLookupController extends Controller {
 	 */
 	private function getPostedData(array $dataKeys, &$data, &$validationMessages) {
 		$validationMessages = array();
-
 		if (array_key_exists('data', $_POST)) {
-			$data = json_encode($_POST['data'], true);
-			foreach ($dataKey as $dataKey) {
+			$data = json_decode($_POST['data'], true);
+		
+			foreach ($dataKeys as $dataKey) {
 				if (!array_key_exists($dataKey, $data)) {
 					$validationMessages[] = "Field '$field' missing in data.";
 				}
