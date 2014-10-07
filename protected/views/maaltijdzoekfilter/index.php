@@ -69,19 +69,20 @@
             array(
                 'htmlOptions'=>array('class'=>'col-md-2'),
                 'name'=>'Productgroep',
-                'value'=>'$data->productgroep->omschrijving',
+                //'value'=>'$data->productgroep_id == null',
+                'value'=>'($data->productgroep_id == null) ? "" : echo $data->productgroep->omschrijving',
                 'htmlOptions'=>array('name'=>'productgroep'),
             ),
             array(
                 'htmlOptions'=>array('class'=>'col-md-2'),
                 'name'=>'Maaltijdtype',
-                'value'=>'$data->maaltijdtype->omschrijving',
+                'value'=>'($data->maaltijdtype_id == null) ? "" : $data->maaltijdtype->omschrijving',
                 'htmlOptions'=>array('name'=>'maaltijdtype'),
             ),
             array(
                 'htmlOptions'=>array('class'=>'col-md-2'),
                 'name'=>'Maaltijdsubtype',
-                'value'=>'substr($data->maaltijdsubtype->omschrijving,0,50)',
+                'value'=>'($data->maaltijdsubtype_id == null) ? "" : $data->maaltijdsubtype->omschrijving',
                 'htmlOptions'=>array('name'=>'maaltijdsubtype'),
             ),
             array(

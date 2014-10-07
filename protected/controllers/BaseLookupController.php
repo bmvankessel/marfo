@@ -242,8 +242,16 @@ abstract class BaseLookupController extends Controller {
         $result['status'] = 'not ok';
         $result['action'] = 'delete';
 		if ($this->getPostData(array('id'), $data, $message)) {
+			$id = $data['id'];
 			$model = new $this->modelname();
-			if ($model->deleteByPk($data['id']) === 1) {
+			if ($model->deleteByPk($id) === 1) {
+				$updateCriterium = $this->foreignKey().'='.$id;
+				/* set fields to null for meals */
+				Maaltijd::model()->updateAll(array($this->foreignKey()=>null), $updateCriterium);
+				
+				/* set fields to null for search criteria */
+				Maaltijdzoekfilter::model()->updateAll(array($this->foreignKey()=>null), $updateCriterium);
+
 				$result['status'] = 'ok';
 			} else {
 				$result['message'] = $this->modelname . ' not found [id=' . $data['id'] . '].';
@@ -386,4 +394,7 @@ abstract class BaseLookupController extends Controller {
         }
     }
 
+	public function actionTest() {
+		Maaltijdzoekfilter::model()->updateAll(array('productgroep_id'=>100), 'productgroep_id=9');
+	}
 }
