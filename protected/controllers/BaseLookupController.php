@@ -18,6 +18,19 @@ abstract class BaseLookupController extends Controller {
 		return $model->tablename() . '_id';
 	}
 	
+	/**
+	 * Deny GET access to the actions that will be called with POST ajax calls.
+	 */
+	public function accessRules() {
+		return array(
+			array(
+				'deny',
+				'actions' => array('relatedparents'),
+				'verbs'=>array('get'),
+			),
+		);
+	}
+	
 	public function actionIndex() {
 		$dataProvider = new CActiveDataProvider($this->modelname);
 		
@@ -30,12 +43,80 @@ abstract class BaseLookupController extends Controller {
 		));
 	}
 
+	/**
+	 * Returns the posted data for the request.
+	 * Data is expected to be posted as a JSON encode string with key = 'data'.
+	 * 
+	 * @param array $dataKeys		Keys expected within the data array.
+	 * @param array | null $data	JSON decoded data array.
+	 * $param array					Messages with validation errors.
+	 * 
+	 * @return boolean				True if data and data keys exist.
+	 */
+	private function getPostedData(array $dataKeys, &$data, &$validationMessages) {
+		$validationMessages = array();
+
+		if (array_key_exists('data', $_POST)) {
+			$data = json_encode($_POST['data'], true);
+			foreach ($dataKey as $dataKey) {
+				if (!array_key_exists($dataKey, $data)) {
+					$validationMessages[] = "Field '$field' missing in data.";
+				}
+			}
+		} else {
+			$validationMessages[] = "Field 'data' not posted.";
+		}
+		
+		return (count($validationMessages) == 0);
+	}
+
+	/**
+	 * Returns an overview of related parent models.
+	 * 
+	 * @param string $_POST['data']		JSON encoded request data.
+	 */
+	public function actionRelatedParents() {
+		$result['status'] = 'not ok';
+		$result['relations'] = array();
+		if ($this->getPostedData(array('id'), $data, $messages)){
+			$id = $data['id'];
+
+			/* determine number of meal models */
+			$count = Maaltijd::model()->count($this->foreignKey() . '=' . $id);
+			if ($count > 0) {
+				$result['relations'][] = array(
+					'text' => "Aantal maaltijden: $count",
+					'count' => $count,
+					'modelNameSingle' => 'maaltijd',
+					'modelNamePlural' => 'maaltijden',
+				);
+			}
+			
+			/* determine number of meal search filters */
+			$count = Maaltijdzoekfilter::model()->count($this->foreignKey() . '=' . $id);
+			if ($count > 0) {
+				$result['relations'][] = array(
+					'text' => "Aantal maaltijdzoekfilters: $count",
+					'count' => $count,
+					'modelNameSingle' => 'maaltijdzoekfilter',
+					'modelNamePlural' => 'maaltijdzoekfilters',
+				);
+			}
+			$result['status'] = 'ok';
+		} else {
+			$result['message'] = $messages;
+		}		
+		
+		echo json_encode($result);
+	}
+
+
     /** 
      * Returns the number of meals referencing the lookup value. 
      *
      * @return string Status of the request including the number of meals.
      */
-    public function actionRelatedParents() {
+    public function _actionRelatedParents() {
 		$data = (isset($_POST['data'])) ? json_decode($_POST['data'], true) : null;
 		$result['status'] = 'not ok';
 		$data['id'] = 7;
@@ -63,7 +144,7 @@ abstract class BaseLookupController extends Controller {
      * 
      * @return					If post contains the expected data.
      */
-    public function getPostData(array $entries, &$data, &$message) {
+    private function getPostData(array $entries, &$data, &$message) {
 		$data = null;
 		$missingEntries = array();
 		$message = null;
