@@ -17,6 +17,7 @@ class Maaltijd extends CCustomActiveRecord {
 		$criteria->compare('productgroep_id', $this->productgroep_id);
 		$criteria->compare('maaltijdtype_id', $this->maaltijdtype_id);
 		$criteria->compare('maaltijdsubtype_id', $this->maaltijdsubtype_id);
+		$criteria->compare('component_groente', $this->component_groente);
 		$criteria->compare('component_rund', $this->component_rund);
 		$criteria->compare('component_varken', $this->component_varken);
 		$criteria->compare('component_vis', $this->component_vis);
@@ -134,6 +135,7 @@ public function attributeLabels()
 			'weekdieren'=>'Weekdieren',
 			'omschrijving' => 'Omschrijving',
 			'component_rund' => 'Rund',
+			'component_groente' => 'Groente',
 			'component_rund_varken' => 'Rund & varken',
 			'component_varken' => 'Varken',
 			'component_vis' => 'Vis',
@@ -226,6 +228,7 @@ public function attributeLabels()
 	public function componentAttributes() {
 		if ($this->scenario == 'search') {
 			return array(
+				'component_groente'=>$this->getAttributeLabel('component_groente'),
 				'component_gevogelte'=>$this->getAttributeLabel('component_gevogelte'),
 				'component_lam'=>$this->getAttributeLabel('component_lam'),
 				'component_rund'=>$this->getAttributeLabel('component_rund'),
@@ -239,6 +242,7 @@ public function attributeLabels()
 			);
 		} else {
 			return array(
+				'component_groente',
 				'component_rund',
 				'component_varken',
 				'component_vis',
