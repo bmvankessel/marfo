@@ -85,6 +85,12 @@ public function tableName()
 		);
 	}
 
+public function rules() {
+	return array(
+		array('specificatie_datum, specificatie_gecontroleerd_op', 'default','setOnEmpty'=>true, 'value'=>null,),
+	);
+}
+
 /**
  * @return array Customized attribute labels (name=>label)
  */
