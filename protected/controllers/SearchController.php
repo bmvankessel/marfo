@@ -65,8 +65,8 @@ class SearchController extends Controller {
         
         $html .= $pdf->htmlTitle('Houdbaarheid en bewaarcondities');
         $data = array();
-        $data[] = array('Houdbaarheid na productie:', '18 maanden mits bewaard bij een temperatuur van max -18⁰ celsius');
-        $data[] = array('Bewaaradvies na ontdooiden:','maximaal 24 uur in de koelkast bij een temperatuur van max. 4⁰ celsius');
+        $data[] = array('Houdbaarheid na productie:', '18 maanden mits bewaard bij een temperatuur van max -18⁰C');
+        $data[] = array('Bewaaradvies na ontdooiden:','maximaal 24 uur in de koelkast bij een temperatuur van max. 4⁰C');
         $data[] = array('', 'LET OP: het product mag slechts eenmaal verwarmd worden.' );
         $html .= $pdf->htmlTable($data ,array(100,100), false, 'houdbaarheid');
 
@@ -108,7 +108,7 @@ class SearchController extends Controller {
         }    
 
         $footer = '*Glutencontrole sneltest uitgevoerd: ';
-        $footer .= ($maaltijd->vrij_van_gluten_controle_sneltest) ? 'ja' : 'nee';
+        $footer .= ($maaltijd->vrij_van_gluten) ? 'ja' : 'nee';
         
         $html .= $pdf->htmlTable($data ,array(1,2), true, 'allergenen', false, $footer);
         
