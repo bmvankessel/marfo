@@ -139,7 +139,7 @@ class SearchController extends Controller {
         $code = $maaltijd->code;
         
         $file = Yii::getPathOfAlias('maaltijdpdf') . '/maaltijd_' . $code . '.pdf';
-        
+  
         $pdf->Output($file, 'F');
 
         $file = Yii::app()->createAbsoluteUrl('maaltijd-pdf/maaltijd_' . $code . '.pdf');

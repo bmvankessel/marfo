@@ -41,7 +41,9 @@
 
     $description = '"<h1 class=\"meal\" title=\"Aanmaken PDF\">" . $data->omschrijving . "</h1>" .';
     $description .= '"<h2>" . $data->code . "</h2>" .';
-    $description .= '"<p class=\"hidden\">" . htmlspecialchars($data->ingredientendeclaratie . " ") . "<a class=\"pdf\" onclick=\"createPdf($data->id)\">Meer informatie <span id=\"$data->id\" class=\"fa fa-file-pdf-o fa-lg\"></span></a></p>"';
+//    $description .= '"<p class=\"hidden\">" . htmlspecialchars($data->ingredientendeclaratie . " ") . "<a class=\"pdf\" onclick=\"createPdf($data->id)\">Meer informatie <span id=\"$data->id\" class=\"fa fa-file-pdf-o fa-lg\"></span></a></p>"';
+    $description .= '"<p class=\"hidden\">" . $data->ingredientendeclaratie . "<a class=\"pdf\" onclick=\"createPdf($data->id)\">Meer informatie <span id=\"$data->id\" class=\"fa fa-file-pdf-o fa-lg\"></span></a></p>"';
+
 
     $image = '';
 

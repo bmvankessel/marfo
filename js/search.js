@@ -40,7 +40,7 @@ function setSearchOptionIcons(selector) {
 function assignPdfCreation() {
     $(".meal").click(
         function(){
-            id = $(this).closest("tr").find("span.fa").attr('id');
+            var id = $(this).closest("tr").find("span.fa").attr('id');
             createPdf(id);
         }
     );    
@@ -56,6 +56,6 @@ $(function() {
     $("ul.search").on("hidden.bs.collapse", function() {
         setSearchOptionIcons("ul.search");
     });
-    
+
     assignPdfCreation();
 });
