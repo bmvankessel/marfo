@@ -502,5 +502,12 @@ div.panel-body {
 }
 
 .search {
-	font-family: verdana;
+	font-family: Verdana, Arial;
 }
+
+div.text-danger {
+    font-family: Verdana, Arial;
+    font-size: 12px;
+}
+
+

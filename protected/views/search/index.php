@@ -31,10 +31,28 @@
     </div>
     <div class="col-md-3">
 <?php
-    echo CHtml::beginForm();
-    echo CHtml::textField('Search[specificatie_datum]', $selectedDate, array('class'=>'searchInput', 'placeholder'=>'nieuw vanaf d.d....'));
+    echo CHtml::openTag('div', array('class'=>'col-xs-12'));
+    echo CHtml::beginForm('','post', array('id'=>'send-date'));
+    $this->widget('CMaskedTextField', 
+        array(
+            'name'=>'Search[specificatie_datum]',
+            'mask'=>'99-99-99',
+            'value' => $selectedDate,
+            'completed' => 'function() {window.validation.checkDate(this.val());}',
+            'htmlOptions'=>array(
+                'class'=>'searchInput',
+                'placeholder'=>'nieuw vanaf d.d....',
+            )
+        )
+    );
+    //echo CHtml::textField('Search[specificatie_datum]', $selectedDate, array('class'=>'searchInput', 'placeholder'=>'nieuw vanaf d.d....'));
     echo CHtml::tag('input', array('id'=>'search-code', 'type'=>'submit', 'class'=>'searchButton'));
     echo Chtml::endForm();
+    echo CHtml::closeTag('div');
+    echo CHtml::tag('div',array('id'=>'error-date', 'class'=>'col-xs-12 text-danger hidden'),
+        CHtml::tag('span', array('class'=>'glyphicon glyphicon-warning-sign'), '&nbsp;' ) .
+        CHtml::tag('span', array('class'=>'message'), '')
+    );
 ?>
     </div>
 </div>
@@ -129,6 +147,123 @@
 dot;
 
     Yii::app()->clientScript->registerScript('dotted', $script, CClientScript::POS_READY);
+
+$script=<<<js
+
+function searchValidation() {
+}
+
+/**
+ * Checks if date is a valid date.
+ *
+ * @param string date                           Date in format 'dd-mm-yy';
+ *
+ * @return boolean                              Whethere date represents as valid date.
+ */
+searchValidation.prototype.validDate = function(date) {
+
+    // string expected with length 8 (dd-mm-yy)
+    if (date.length != 8) {
+        return false;
+    }
+
+    // split in day, month, year
+    var dateParts = date.split("-");
+    // three parts expected
+    if (dateParts.length != 3) {
+        return false;
+    }
+
+    // can alle parts be parsed to integers
+    for (var i=0; i<dateParts.length; i++) {
+        if (isNaN(parseInt(dateParts[i], 10))) {
+            return false;
+        }
+    }
+
+    // get day
+    var day = parseInt(dateParts[0]);
+
+    // get month, months are zero based
+    var month = parseInt(dateParts[1]);
+    month--;
+
+    // get year (break for 2000 is 90)
+    var year = parseInt(dateParts[2]);
+    if (year > 90) {
+        year = 1900 + year;
+    } else {
+        year = 2000 + year;
+    }
+
+    // create date
+    var dt = new Date(year, month, day);
+
+    // check against initial date parts (must be the same)
+    if (dt.getDate() != day || dt.getMonth() != month || dt.getFullYear() != year) {
+        return false;
+    }
+
+    // passed all checks
+    return true;
+}
+
+/**
+ * Checks date and displays a message if date is not valid.
+ *
+ * @param string date                           Date to be checked.
+ */
+searchValidation.prototype.checkDate = function(date) {
+    if (this.validDate(date)) {
+        this.displayDateError();
+        return true;
+    } else {
+        this.displayDateError("Geen geldige datum (dd-mm-jj)");
+        return false;
+    }
+}
+
+/**
+ * Displays error message for date field.
+ * If message is empty, no error will be displayed.
+ *
+ * @param string message                        Message to display.
+ */
+searchValidation.prototype.displayDateError = function(message) {
+    message = (typeof message === "undefined") ? "" : message;
+    var errorPane = $("#error-date");
+    var errorMessage = errorPane.find("span.message");
+
+    errorMessage.text(message);
+
+    if (message.length === 0) {
+        errorPane.addClass("hidden");
+    } else {
+        errorPane.removeClass("hidden");
+    }
+}
+
+window.validation = new searchValidation();
+js;
+
+Yii::app()->clientScript->registerScript('date-check', $script, CClientScript::POS_END);
+
+$script=<<<js
+window.validation.displayDateError();
+$("#send-date").submit(function(event) {
+    var date = $("#Search_specificatie_datum");
+    if (date.val().length == 0) {
+        return;
+    }
+    if (window.validation.checkDate(date.val())) {
+        return;
+    } else { 
+        date.focus();
+        event.preventDefault();
+    }
+});
+js;
+Yii::app()->clientScript->registerScript('validation', $script, CClientScript::POS_READY);
 
     Yii::app()->clientScript->registerScriptFile('//cdn.jsdelivr.net/jquery.dotdotdot/1.6.13/jquery.dotdotdot.min.js',  CClientScript::POS_END );
 ?>
