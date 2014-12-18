@@ -29,6 +29,14 @@
     echo CHtml::endForm();
 ?>
     </div>
+    <div class="col-md-3">
+<?php
+    echo CHtml::beginForm();
+    echo CHtml::textField('Search[specificatie_datum]', $selectedDate, array('class'=>'searchInput', 'placeholder'=>'nieuw vanaf d.d....'));
+    echo CHtml::tag('input', array('id'=>'search-code', 'type'=>'submit', 'class'=>'searchButton'));
+    echo Chtml::endForm();
+?>
+    </div>
 </div>
 
 <div class="row">

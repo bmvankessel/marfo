@@ -14,6 +14,36 @@ class Maaltijd extends CCustomActiveRecord {
 		$criteria = new CDbCriteria;
 		$criteria->compare('code', $this->code, true);
 		$criteria->compare('omschrijving', $this->omschrijving, true);
+        if ($this->specificatie_datum !== null) {
+            $dateParts = explode('-', $this->specificatie_datum);
+            if (count($dateParts) == 3) {
+                $format = '';
+                # determine format for day
+                if (strlen($dateParts[0]) == 1) {
+                    $format .= 'j';
+                } else {
+                    $format .= 'd';
+                }
+                $format .= '-';
+                # determine format for month
+                if (strlen($dateParts[1]) == 1) {
+                    $format .='n';
+                } else {
+                    $format .= 'm';
+                }
+                $format .= '-';
+                if (strlen($dateParts[2]) == 2) {
+                    $format .= 'y';
+                } else {
+                    $format .= 'Y';
+                }
+
+                $date = DateTime::createFromFormat($format,$this->specificatie_datum);
+                $date = $date->format('Y-m-d');
+                $criteria->addCondition("specificatie_datum >='$date'");
+            }
+        //$criteria->compare('specificatie_datum', $this->specificatie_datum);
+        }
 		$criteria->compare('productgroep_id', $this->productgroep_id);
 		$criteria->compare('maaltijdtype_id', $this->maaltijdtype_id);
 		$criteria->compare('maaltijdsubtype_id', $this->maaltijdsubtype_id);

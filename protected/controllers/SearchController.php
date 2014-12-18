@@ -192,12 +192,6 @@ class SearchController extends Controller {
 		 */
         if (isset($_P_G['Search'])) {
             $model->setAttributes($_P_G['Search'], false);
-            
-//            var_dump($_P_G);
-//            
-//            echo $model->productgroep_id . '<br>';
-//            echo $model->maaltijdtype_id . '<br>';
-//            echo $model->maaltijdsubtype_id. '<br>';
         }
 
         $selectedGroup = (isset($_P_G['group'])) ? $_P_G['group'] : 0;
@@ -205,6 +199,7 @@ class SearchController extends Controller {
         /* set the values comming from one of the the search inputs */
         $selectedCode = (isset($_P_G['Search']['code'])) ? $_P_G['Search']['code'] : '';
         $selectedDescription = (isset($_P_G['Search']['omschrijving'])) ? $_P_G['Search']['omschrijving'] : '';
+        $selectedDate = (isset($_P_G['Search']['specificatie_datum'])) ? $_P_G['Search']['specificatie_datum'] : '';
         
         /*
          * Store the selected search tree elements.
@@ -228,7 +223,8 @@ class SearchController extends Controller {
             'model'=>$model, 
             'selectedMenu'=>$selectedMenu, 
             'selectedCode'=>$selectedCode, 
-            'selectedDescription'=>$selectedDescription)
+            'selectedDescription'=>$selectedDescription,
+            'selectedDate'=>$selectedDate)
         );
         
     }
