@@ -50,8 +50,7 @@ class SearchController extends Controller {
         $data = array(
             array('Bedrijfsnaam', 'Marfo B.V.'),
             array('Adresgegevens', 'Koperstraat 25-31, 8211 AK, Lelystad'),
-            array('ContactPersoon','Ira van der Plas'),
-            array('E-mailadres','ira.van.der.plas@marfo.com'),
+            array('E-mailadres','info@marfo.com'),
             array('EEG-nr','212'),
         );
         $html .= $pdf->htmlTable($data ,array(1,1), false, 'bedrijfsgegevens');
@@ -65,8 +64,8 @@ class SearchController extends Controller {
         
         $html .= $pdf->htmlTitle('Houdbaarheid en bewaarcondities');
         $data = array();
-        $data[] = array('Houdbaarheid na productie:', '18 maanden mits bewaard bij een temperatuur van max -18⁰C');
-        $data[] = array('Bewaaradvies na ontdooiden:','maximaal 24 uur in de koelkast bij een temperatuur van max. 4⁰C');
+        $data[] = array('Houdbaarheid na productie:', '18 maanden mits bewaard bij een temperatuur van max. -18⁰C');
+        $data[] = array('Bewaaradvies na ontdooiden:','maximaal 24 uur in de koelkast bij een temperatuur van max. 7⁰C');
         $data[] = array('', 'LET OP: het product mag slechts eenmaal verwarmd worden.' );
         $html .= $pdf->htmlTable($data ,array(100,100), false, 'houdbaarheid');
 
