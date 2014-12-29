@@ -24,6 +24,21 @@ class SearchController extends Controller {
         );
     }
     
+    /**
+     * Converts date (CCYY-MM-DD) to Dutch date (DD-MM-CCYY).
+     *
+     * No validation peformed on dates passed as argument.
+     */
+    private function dutchDate($date, $defaultValue = '-') {
+        if ($date === null || strlen(trim($date)) == 0) {
+            return $defaultValue;
+        } else {
+            # split date based on hyphen
+            $dateParts = explode('-', trim($date));
+            return $dateParts[2] . '-' . $dateParts[1] . "-" . $dateParts[0];
+        }
+    }
+
     /*
      * Create PDF
      */
@@ -136,8 +151,12 @@ class SearchController extends Controller {
         $html .= $pdf->htmlTable($data ,array(1,2), false, 'bereidingswijze');        
         
         $html .= "<br>";
-        $html .= $pdf->htmlTitle('Verklaring Marfo');
-        $html .= $pdf->htmlPictureAndStatement('','',$imageSource);
+        $html .= $pdf->htmlTitle('Autorisatie Marfo');
+
+        $html .= $pdf->htmlPictureAndStatement(
+            $this->dutchDate($maaltijd->specificatie_datum),
+            $this->dutchDate($maaltijd->specificatie_gecontroleerd_op)
+        );
         
         $pdf->writeHtml($html);
         
