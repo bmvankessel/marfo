@@ -116,7 +116,7 @@ class SearchController extends Controller {
         # build explanation (static and dynamic text)
         $explanation = CHtml::encode('Een "+" geeft aan dat het betreffende bestanddeel aanwezig is in het product.');
         # ignore descriptions containin a zero as string as well (delivery error)
-        if ($maaltijd->melding_allergenentabel !== null && $maaltijd->melding_allergenentabel != 0 && strlen($maaltijd->melding_allergenentabel)>0) {
+        if ($maaltijd->melding_allergenentabel !== null && $maaltijd->melding_allergenentabel != "0" && strlen($maaltijd->melding_allergenentabel)>0) {
             $explanation .= '<br>' . CHtml::encode($maaltijd->melding_allergenentabel);
         }
         $html .= CHtml::tag('div', array('class'=>'uitleg9'), $explanation);
