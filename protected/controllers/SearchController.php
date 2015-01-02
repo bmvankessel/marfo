@@ -174,27 +174,6 @@ class SearchController extends Controller {
         Yii::app()->end();        
   }
   
-	/**
-	 * Returns the value form the post or get array.
-	 * First the post and than the get array is checked.
-	 * 
-	 * @param string $field			Name of the field.
-	 * @param mixed $defaultValue	Value if not found.
-	 *
-	 * Returns either the value from the post or get array, or the default value. 
-	 */ 
-//	private function getPostGetValue($field, $defaultvalue) {
-//		if (isset($_POST[$field])) {
-//			return $_POST[$field];
-//		} else {
-//			if (isset($_GET[$field])) {
-//				return $_GET[$field];
-//			} else
-//				return $defaultValue;
-//			}
-//		}
-//	}
-    
     /**
      * Displays the search page for the meals.
      * 

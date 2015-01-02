@@ -401,13 +401,13 @@ div.panel-body {
     outline: none;
 }
 .searchInput {
-    background-image: url('../images/field-bg.gif');    
+    background-image: url('../images/field-bg2.gif');    
     background-repeat: no-repeat;
     padding: 5px 15px 8px 15px;
     background-color: rgba(0,0,0,0);
     border:none;
-    height: 25px;
-    width: 135px;
+    height: 28px;
+    width: 119px;
     padding: 5px 15px 8px 15px;
     font-family: Verdana, Arial;
     font-size: 10px;
@@ -502,11 +502,11 @@ div.panel-body {
 }
 
 .search {
-	font-family: Verdana, Arial;
+	font-family: Verdana;
 }
 
 div.text-danger {
-    font-family: Verdana, Arial;
+    font-family: Verdana;
     font-size: 12px;
 }
 
