@@ -510,4 +510,11 @@ div.text-danger {
     font-size: 12px;
 }
 
+body.search {
+    padding: 30px 10px 15px;
+}
 
+body.search > div.container {
+    width: 100%;
+    padding: 0px;
+}
