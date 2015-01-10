@@ -13,16 +13,20 @@
         <link rel="stylesheet" href="<?=Yii::app()->createUrl('jquery-ui/css/ui-lightness/jquery-ui-1.10.4.min.css')?>">
         <link rel="stylesheet" href="<?=Yii::app()->createUrl('bootstrap/css/bootstrap.min.css')?>">
         <link rel="stylesheet" href="<?=Yii::app()->createUrl('bootstrap/css/bootstrap-theme.min.css')?>">
+        <!--
         <link rel="stylesheet" href="<?=Yii::app()->createUrl('initializr/css/main.css')?>">
+        -->
         <link rel="stylesheet" href="<?=Yii::app()->createUrl('css/custom.css')?>">
         <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
         <script src="<?=Yii::app()->createUrl('jquery-ui/js/jquery-ui-1.10.4.min.js')?>"></script>
         <script src="<?=Yii::app()->createUrl('bootstrap/js/bootstrap.min.js')?>"></script>
+        <!--
         <script src="<?=Yii::app()->createUrl('initializr/js/vendor/modernizr-2.6.2-respond-1.1.0.min.js')?>"></script>
+        -->
         <script src="<?=Yii::app()->createUrl('js/utils.js')?>"></script>
         <!--[if lte IE 9]>
-                <script src="<?=Yii::app()->createUrl('js/placeholder.js')?>"></script>
+                <script src="<?=Yii::app()->createUrl('js/jquery.placeholder.js')?>"></script>
         <![endif]-->        
 
         <?php echo CHtml::hiddenField('url', Yii::app()->getBaseUrl(true)) ?>
@@ -48,5 +52,13 @@
         </div>
     </div>
 
+
+	<!--[if lte IE 9]>
+	<script>
+		$(function(){
+			$("input.searchInput").placeholder();
+		});
+	</script>
+    <![endif]-->        
     </body>
 </html>
