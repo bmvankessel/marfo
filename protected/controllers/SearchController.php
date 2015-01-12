@@ -64,7 +64,7 @@ class SearchController extends Controller {
         $html .= $pdf->htmlTitle('Bedrijfsgegevens');
         $data = array(
             array('Bedrijfsnaam', 'Marfo B.V.'),
-            array('Adresgegevens', 'Koperstraat 25-31, 8211 AK, Lelystad'),
+            array('Adresgegevens', 'Koperstraat 25-31, 8211 AK Lelystad'),
             array('E-mailadres','info@marfo.com'),
             array('EEG-nr','212'),
         );
@@ -79,8 +79,8 @@ class SearchController extends Controller {
         
         $html .= $pdf->htmlTitle('Houdbaarheid en bewaarcondities');
         $data = array();
-        $data[] = array('Houdbaarheid na productie:', '18 maanden mits bewaard bij een temperatuur van max. -18⁰C');
-        $data[] = array('Bewaaradvies na ontdooiden:','maximaal 24 uur in de koelkast bij een temperatuur van max. 7⁰C');
+        $data[] = array('Houdbaarheid na productie', '18 maanden mits bewaard bij een temperatuur van max. -18⁰C');
+        $data[] = array('Bewaaradvies na ontdooiden','maximaal 24 uur in de koelkast bij een temperatuur van max. 7⁰C');
         $data[] = array('', 'LET OP: het product mag slechts eenmaal verwarmd worden.' );
         $html .= $pdf->htmlTable($data ,array(100,100), false, 'houdbaarheid');
 
@@ -132,6 +132,7 @@ class SearchController extends Controller {
         
         $html .= $pdf->htmlTable($data ,array(1,2), true, 'allergenen', false, $footer);
         
+        # section "Overige kwalificaties"
         $html .= "<br>";
         $html .= $pdf->htmlTitle('Overige kwalificaties');
         $data = array();
@@ -139,8 +140,9 @@ class SearchController extends Controller {
             $label = "label$modelAttribute";
             $data[] = array($maaltijd->$label, ($maaltijd->$modelAttribute) ? 'Ja' : 'Nee');
         }    
-        $html .= $pdf->htmlTable($data ,array(1,2), false, 'gezondheid');
+        $html .= $pdf->htmlTable($data ,array(1,2), false, 'standaard');
 
+        # section "Bereidingswijze"
         $html .= "<br>";
         $html .= $pdf->htmlTitle('Bereidingswijze');
         $data = array();
@@ -148,16 +150,24 @@ class SearchController extends Controller {
             $label = "label$modelAttribute";
             $data[] = array($maaltijd->$label, $maaltijd->$modelAttribute);
         }    
-        $html .= $pdf->htmlTable($data ,array(1,2), false, 'bereidingswijze');        
-        
+        $html .= $pdf->htmlTable($data ,array(1,2), false, 'standaard');
+      
+        # section "Autorisatie Marfo"
         $html .= "<br>";
         $html .= $pdf->htmlTitle('Autorisatie Marfo');
+        $data = [
+            ['Specificatiedatum', $this->dutchDate($maaltijd->specificatie_datum)],
+            ['Gecontroleerd op', $this->dutchDate($maaltijd->specificatie_gecontroleerd_op)],
+            ['Gecontroleerd door', 'QA manager Marfo B.V.'],
+        ];
+/*
+        $data = array();
+        $data[] = array('Specificatiedatum', $this->dutchDate($maaltijd->specificatie_datum));
+        $data[] = array('Gecontroleerd op', $this->dutchDate($maaltijd->specificatie_gecontroleerd_op));
+        $data[] = array('Gecontroleerd door', 'QA manager Marfo B.V.');
+*/
+        $html .= $pdf->htmlTable($data, array(1,2), false, 'standaard');
 
-        $html .= $pdf->htmlPictureAndStatement(
-            $this->dutchDate($maaltijd->specificatie_datum),
-            $this->dutchDate($maaltijd->specificatie_gecontroleerd_op)
-        );
-        
         $pdf->writeHtml($html);
         
         $code = $maaltijd->code;
