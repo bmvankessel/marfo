@@ -39,6 +39,14 @@ class SearchController extends Controller {
         }
     }
 
+	public function actionTest($lang='nl') {
+		yii::app()->language = $lang;
+		$persons = Person::model()->findAll();
+		foreach($persons as $person) {
+			var_dump($person->name);
+		}
+	}
+
     /*
      * Create PDF
      */

@@ -73,7 +73,10 @@ class Maaltijd extends CCustomActiveRecord {
 		$criteria->compare('code', $this->code, true);
 		$criteria->compare('maaltijdtype_id', $this->maaltijdtype_id);
 		$criteria->compare('maaltijdsubtype_id', $this->maaltijdsubtype_id);
-
+		$criteria->order = 'IF(LOCATE("nieuw", LOWER(IFNULL(`code`, ""))) > 0, `copy_of_code`, `code`), `code`';
+		
+		
+		
 		return new CActiveDataProvider($this, array(
 			'criteria' => $criteria,
 			'pagination' => array(

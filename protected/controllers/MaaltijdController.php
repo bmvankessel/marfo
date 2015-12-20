@@ -56,6 +56,21 @@ class MaaltijdController extends Controller {
                     'code'=>$maaltijd->code,
                 ));
     }
+    
+    public function actionCopy($id) {
+		$maaltijd = Maaltijd::model()->findByPk($id);
+		$maaltijd->isNewRecord = true;
+		$maaltijd->id = null;
+		$originalCode = $maaltijd->code; 
+		$maaltijd->copy_of_code = $maaltijd->code;
+		$maaltijd->code = 'artnr NIEUW';
+		
+		$maaltijd->save();
+		
+		Yii::app()->user->setFlash('success', "Kopie aangemaakt van maaltijd $originalCode.");
+		
+		$this->view($maaltijd);
+	}
 
     public function actionUpdate($id) {
             if (Yii::app()->request->isPostRequest) {
@@ -109,6 +124,24 @@ class MaaltijdController extends Controller {
         echo json_encode($result);
         Yii::app()->end();
     }
+    
+    protected function view($model) {
+		$this->menu = Yii::app()->menuManager->getMain();
+
+		$maaltijdtype = new Maaltijdtype();
+		$maaltijdsubtype = new Maaltijdsubtype();
+		$productgroep = new Productgroep();
+		$this->render(
+			"update",
+			[
+				'model'=>$model,
+				'updateAllowed'=>(Yii::app()->user->isGuest == false),
+				'productgroepDescriptions'=>$productgroep->omschrijvingen(),
+				'typeDescriptions'=>$maaltijdtype->omschrijvingen(),
+				'subTypeDescriptions'=>$maaltijdsubtype->omschrijvingen(),
+			]
+		);
+	}
 
     public function actionView($id) {
         $model = $this->loadModel($id);
@@ -119,6 +152,8 @@ class MaaltijdController extends Controller {
             fclose($fp);
             die;
         } else {
+			$this->view($model);
+/*
             $this->menu = Yii::app()->menuManager->getMain();
 
             $maaltijdtype = new Maaltijdtype();
@@ -134,6 +169,7 @@ class MaaltijdController extends Controller {
                         'subTypeDescriptions'=>$maaltijdsubtype->omschrijvingen(),
                     )
            );
+*/
         }
     }
 

@@ -182,8 +182,16 @@
 
     <div class="container">
         <div class="row">
+			<?php $flashes = Yii::app()->user->getFlashes(); ?>
+			<?php if (count($flashes) > 0) { ?>
+			<div class="col-md-12">		
+				<?php foreach($flashes as $key=>$message) { ?>
+					<div class="alert alert-<?=$key?>"><?=$message?></div>
+				<?php }?>
+			</div>
+			<?php }?>
             <div class="col-md-12">
-                <?php echo $content ?>
+                <?= $content ?>
             </div>
         </div>
     </div>

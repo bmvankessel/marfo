@@ -1,4 +1,5 @@
 <?php
+
     // add modal template to document
     echo $this->renderPartial('../general/_modal');
 
@@ -70,10 +71,11 @@
     $template[] = "{view}";
     $template[] = "{pdf}";
     $template[] = "{update}";
+    $template[] = "{copy}";
     $template[] = "{delete}";
 
     $template = implode(' ', $template);
-
+$test = 'barry';
     $this->widget('zii.widgets.grid.CGridView', array(
         'ajaxType'=>'post',
 //	'dataProvider'=>$dataProvider,
@@ -96,7 +98,13 @@
                 'class'=>'CButtonColumn',
                 'template'=>$template,
                 'headerHtmlOptions'=>array('style'=>'width:75px'),
+                'headerHtmlOptions'=>[
+					'class'=>'action',
+                ],
                 'htmlOptions'=>array('style'=>'width:75px'),
+                'htmlOptions' => [
+					'class' => 'action',
+				],
                 'buttons'=>array(
                     'view'=>array(
                         'label'=>'',
@@ -115,6 +123,12 @@
                         'imageUrl'=>'',
                         'options'=>array('class'=>'glyphicon glyphicon-pencil'),
                     ),
+					'copy' => [
+						'label' => '',
+						'imageUrl' => '',
+						'url'=> 'Yii::app()->controller->createUrl("copy", ["id"=>$data->id])',
+						'options'=>array('class'=>'glyphicon glyphicon-duplicate'),
+					],
                     'delete'=>array(
                         'label'=>'',
                         'imageUrl'=>'',
@@ -127,12 +141,12 @@
             array(
                 'name'=>'Code',
                 'value'=>'$data->code',
-                'sortable'=>true
+                'sortable'=>false
             ),
             array(
                 'name'=>'Omschrijving',
                 'value'=>'$data->omschrijving',
-                'sortable'=>true
+                'sortable'=>false
             ),
             array(
                 'name'=>'Id',
@@ -140,7 +154,7 @@
                 'htmlOptions'=>array('name'=>'id', 'class'=>'hidden'),
                 'value'=>'$data->id',
                 'visible'=>'false',
-                'sortable'=>true,
+                'sortable'=>false,
             ),
         )
 

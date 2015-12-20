@@ -518,3 +518,7 @@ body.search > div.container {
     width: 100%;
     padding: 0px;
 }
+
+td.action, th.action {
+	width: 85px;
+}
