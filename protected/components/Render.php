@@ -1034,7 +1034,7 @@ public static function voedingswaarden($attributes, array $options = array()) {
 	);
 
 	// header
-	$html .= self::groupRow('<i>Voedingswaarde</i>', '<b><i>per 100g</i></b>', '<b><i>per maaltijd</i></b>', $optionsRow);
+	$html .= self::groupRow('<i>Voedingswaarde</i>', '<b><i>per 100g</i></b>', '<b><i>per portie</i></b>', $optionsRow);
 
 	// remove the header class
 	unset($optionsRow['class']);

@@ -39,14 +39,6 @@ class SearchController extends Controller {
         }
     }
 
-	public function actionTest($lang='nl') {
-		yii::app()->language = $lang;
-		$persons = Person::model()->findAll();
-		foreach($persons as $person) {
-			var_dump($person->name);
-		}
-	}
-
     /*
      * Create PDF
      */
@@ -61,7 +53,6 @@ class SearchController extends Controller {
         $maaltijdType = Maaltijdtype::model()->findByPk($maaltijd->maaltijdtype_id);
         $maaltijdSubType = Maaltijdsubtype::model()->findByPk($maaltijd->maaltijdsubtype_id);
         $pdf = new Pdf();
-	//$pdf->SetFooter('Hello World!');
         $code = $maaltijd->code;
         $imageSource = Yii::getPathOfAlias('maaltijdimg') . "/$code.jpg";
         
@@ -98,7 +89,7 @@ class SearchController extends Controller {
         
         $html .= $pdf->htmlTitle('Voedingswaarden');
         $data = array();
-        $data[] = array('Voedingswaarden', 'per 100g', 'per maaltijd');
+        $data[] = array('Voedingswaarden', 'per 100g', 'per portie');
 
         foreach($maaltijd->voedingswaardeAttributes() as $modelAttribute) {
             $label = "label$modelAttribute";
@@ -169,7 +160,12 @@ class SearchController extends Controller {
             ['Gecontroleerd op', $this->dutchDate($maaltijd->specificatie_gecontroleerd_op)],
             ['Gecontroleerd door', 'QA manager Marfo B.V.'],
         ];
-
+/*
+        $data = array();
+        $data[] = array('Specificatiedatum', $this->dutchDate($maaltijd->specificatie_datum));
+        $data[] = array('Gecontroleerd op', $this->dutchDate($maaltijd->specificatie_gecontroleerd_op));
+        $data[] = array('Gecontroleerd door', 'QA manager Marfo B.V.');
+*/
         $html .= $pdf->htmlTable($data, array(1,2), false, 'standaard');
 
         $pdf->writeHtml($html);
